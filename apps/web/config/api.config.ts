@@ -6,13 +6,13 @@ export const API = {
   SITE_SETTINGS:{
 
     GET_SITE: {
-      url: `${env.apiUrl}/site-setting?populate=*`,
+      url: `${env.apiUrl}/site-settings?populate=*`,
       method: 'GET',
     },
 
     
     GET_ABOUT: {
-      url: `${env.apiUrl}/about`,
+      url: `${env.apiUrl}/about-pages`,
       method: 'GET',
     },
     
@@ -35,6 +35,11 @@ export const API = {
     GET_BLOG: {
       url: `${env.apiUrl}/blog-posts?populate=*`,
       method: 'GET',
+    },
+
+    POST_CONTACT_FORM: {
+      url: `${env.apiUrl}/contacts`,
+      method: 'POST',
     }
 
   }

@@ -1,5 +1,7 @@
-'use client';
 
+
+import Footer from '@/app/components/footer-view';
+import Header from '@/app/components/header-view';
 import env from '@/config/env';
 import { DashboardProps } from '@/props/dashboard-props';
 import Link from 'next/link';
@@ -7,46 +9,7 @@ import Link from 'next/link';
 export default function Dashboard(siteData: DashboardProps) {
   return (
     <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]">
-      <header className="border-b border-[var(--color-border)] bg-[var(--color-surface)]">
-        <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link
-            href="/"
-            className="text-[var(--font-size-xl)] font-bold text-[var(--color-primary)]"
-          >
-            {siteData.name}
-          </Link>
-
-          <div className="flex items-center gap-6">
-            <Link
-              href="/"
-              className="text-[var(--font-size-sm)] font-medium hover:text-[var(--color-primary)]"
-            >
-              Home
-            </Link>
-
-            <Link
-              href="/pages/about"
-              className="text-[var(--font-size-sm)] font-medium hover:text-[var(--color-primary)]"
-            >
-              About
-            </Link>
-
-            <Link
-              href="/pages/services"
-              className="text-[var(--font-size-sm)] font-medium hover:text-[var(--color-primary)]"
-            >
-              Services
-            </Link>
-
-            <Link
-              href="/pages/blog"
-              className="text-[var(--font-size-sm)] font-medium hover:text-[var(--color-primary)]"
-            >
-              Blog
-            </Link>
-          </div>
-        </nav>
-      </header>
+      <Header />
 
       <main>
         {/* Hero / Banner */}
@@ -134,13 +97,7 @@ export default function Dashboard(siteData: DashboardProps) {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)]">
-        <div className="mx-auto max-w-6xl px-6 py-8">
-          <p className="text-[var(--font-size-sm)] text-[var(--color-text-secondary)]">
-            {siteData.footerText}
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

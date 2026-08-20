@@ -3,7 +3,7 @@
 import env from '@/config/env';
 import { IBlogDetailProps } from '@/props/blog-detail-props';;
 import Link from 'next/link';
-
+export const revalidate = 60;
 export default function BlogDetailView(blog: IBlogDetailProps ) {
 
   return (
@@ -74,5 +74,5 @@ export default function BlogDetailView(blog: IBlogDetailProps ) {
 
 
 
-export const revalidate = 60;
+
 

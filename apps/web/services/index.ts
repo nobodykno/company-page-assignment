@@ -4,7 +4,7 @@ import getServices from './business-service';
 import getBlog from './blog-service';
 import getTeams from './team-service';
 import getVision from './vision-service';
-
+import postContact from './contact-service';
 
 const services  = {
   getSiteSetting,
@@ -12,7 +12,8 @@ const services  = {
   getServices,
   getBlog,
   getTeams,
-  getVision
+  getVision,
+  postContact
 };
  
 export default services;

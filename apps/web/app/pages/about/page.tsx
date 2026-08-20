@@ -12,6 +12,8 @@ export default async function AboutPage() {
     const vision = await services.getVision();
     const teams = await services.getTeams();
 
+    console.log(about);
+
     aboutPageData = {
       about: about.about,
       vision: vision.vision,

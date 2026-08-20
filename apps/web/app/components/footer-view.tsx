@@ -13,7 +13,7 @@ export default async function Footer() {
         </p>
 
         <Link
-          href="/pages/contact"
+          href="/pages/contact-page"
           className="text-[var(--font-size-sm)] font-semibold text-[var(--color-primary)] hover:opacity-80"
         >
           Contact Us

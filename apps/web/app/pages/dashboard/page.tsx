@@ -13,6 +13,8 @@ export default async function DashboardPage() {
     const servicesName = await services.getServices();
     const teams = await services.getTeams();
 
+    // console.log('about',about);
+
     siteData = {
       name: siteSetting.companyName,
       footerText: siteSetting.footerText,
@@ -22,6 +24,7 @@ export default async function DashboardPage() {
       teams,
     };
   } catch (error) {
+    console.log(error);
     return (
       <ErrorView
         error={

@@ -28,15 +28,12 @@ export const httpService = async <T>(
 
   if (body) {
     options.body = JSON.stringify(body);
+    options.headers = {
+      'Content-Type': 'application/json',
+    };
   }
 
   const response = await fetch(request.url, options);
-
-  console.log('HTTP RESPONSE:', {
-    url: response.url,
-    status: response.status,
-    ok: response.ok,
-  });
 
   return handleResponse<T>(response);
 };
