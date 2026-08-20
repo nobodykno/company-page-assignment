@@ -736,6 +736,9 @@ export interface ApiSiteSettingSiteSetting extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    companyBanner: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     companyName: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -783,6 +786,34 @@ export interface ApiTeamMemberTeamMember extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiVisionVision extends Struct.SingleTypeSchema {
+  collectionName: 'visions';
+  info: {
+    displayName: 'vision ';
+    pluralName: 'visions';
+    singularName: 'vision';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::vision.vision'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    vision: Schema.Attribute.Text;
   };
 }
 
@@ -1308,6 +1339,7 @@ declare module '@strapi/strapi' {
       'api::service.service': ApiServiceService;
       'api::site-setting.site-setting': ApiSiteSettingSiteSetting;
       'api::team-member.team-member': ApiTeamMemberTeamMember;
+      'api::vision.vision': ApiVisionVision;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

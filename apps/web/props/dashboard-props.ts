@@ -4,5 +4,6 @@ export interface DashboardProps {
   name: string;
   footerText: string;
   about: string;
+  companyBanner:string;
   services: IService[];
   }
