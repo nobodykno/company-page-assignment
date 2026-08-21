@@ -1,4 +1,7 @@
 
+/**
+ * Config file for API's
+ */
 import env from './env'; 
 
 export const API = {
@@ -12,7 +15,7 @@ export const API = {
 
     
     GET_ABOUT: {
-      url: `${env.apiUrl}/about`,
+      url: `${env.apiUrl}/about-page`,
       method: 'GET',
     },
     
@@ -27,6 +30,11 @@ export const API = {
       method: 'GET',
     },
 
+    GET_TEAM_DETAIL : (id: number) => ({
+      url: `${env.apiUrl}/team-members?filters[id][$eq]=${id}&populate=*`,
+      method: 'GET',
+    }),
+
     GET_VISION: {
       url: `${env.apiUrl}/vision`,
       method: 'GET',
@@ -35,6 +43,16 @@ export const API = {
     GET_BLOG: {
       url: `${env.apiUrl}/blog-posts?populate=*`,
       method: 'GET',
+    },
+
+    GET_BLOG_BY_SLUG: (slug: string) =>({
+      url: `${env.apiUrl}/blog-posts?filters[slug][$eq]=${slug}&populate=*`,
+      method: 'GET',
+    }),
+
+    POST_CONTACT_FORM: {
+      url: `${env.apiUrl}/contacts`,
+      method: 'POST',
     }
 
   }
