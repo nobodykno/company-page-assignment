@@ -11,6 +11,7 @@ const aboutData: IAboutProps = {
 
   team: [
     {
+      id:1,
       name: 'John Doe',
       designation: 'Frontend Developer',
       bio: 'John specializes in building modern and accessible user interfaces.',
@@ -19,6 +20,7 @@ const aboutData: IAboutProps = {
       },
     },
     {
+      id:2,
       name: 'Jane Smith',
       designation: 'Backend Developer',
       bio: 'Jane specializes in scalable backend systems and APIs.',
@@ -27,6 +29,7 @@ const aboutData: IAboutProps = {
       },
     },
     {
+      id:3,
       name: 'Mike Wilson',
       designation: 'UI/UX Designer',
       bio: 'Mike creates simple and user-friendly digital experiences.',

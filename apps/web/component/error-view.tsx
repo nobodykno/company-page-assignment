@@ -1,6 +1,10 @@
 import { ErrorProps } from '@/props/error-props';
 
-
+/**
+ * Global error view
+ * @param error 
+ * @returns the error view to the page
+ */
 
 const ErrorView = (error: ErrorProps) =>{
   return (

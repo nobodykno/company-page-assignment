@@ -2,17 +2,19 @@ import services from '@/services';
 import AboutView from './about-view';
 import ErrorView from '@/component/error-view';
 
+/** Conditon to implement SSG */
 export const dynamic = 'force-static';
 
+/** View for about Page */
 export default async function AboutPage() {
   let aboutPageData;
 
   try {
     const about = await services.getAbout();
     const vision = await services.getVision();
-    const teams = await services.getTeams();
+    const teams = await services.teamService.getTeams();
 
-    console.log(about);
+  
 
     aboutPageData = {
       about: about.about,

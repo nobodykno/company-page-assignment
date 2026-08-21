@@ -3,8 +3,11 @@ import ErrorView from '@/component/error-view';
 import BlogDetailView from './blog-detail-view';
 import { IBlogResponse } from '@/types/blog';
 
+/** Steps to implement ISG */
 export const revalidate = 60;
 
+
+/** functions to render the view */
 export default async function BlogDetailPage({
   searchParams,
 }: {

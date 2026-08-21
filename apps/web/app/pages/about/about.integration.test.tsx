@@ -7,7 +7,9 @@ jest.mock('@/services', () => ({
   default: {
     getAbout: jest.fn(),
     getVision: jest.fn(),
-    getTeams: jest.fn(),
+    teamService: {
+      getTeams: jest.fn(),
+    },
   },
 }));
 
@@ -19,6 +21,9 @@ jest.mock('@/component/error-view', () => ({
 }));
 
 const mockedServices = services as jest.Mocked<typeof services>;
+
+const getTeamsMock =
+  mockedServices.teamService.getTeams as jest.Mock;
 
 describe('AboutPage Integration', () => {
   beforeEach(() => {
@@ -36,8 +41,9 @@ describe('AboutPage Integration', () => {
         'Our vision is to empower businesses through innovative and reliable technology solutions.',
     });
 
-    mockedServices.getTeams.mockResolvedValue([
+    getTeamsMock.mockResolvedValue([
       {
+        id: 1,
         name: 'John Doe',
         designation: 'Frontend Developer',
         bio: 'John specializes in modern frontend development.',
@@ -46,6 +52,7 @@ describe('AboutPage Integration', () => {
         },
       },
       {
+        id: 2,
         name: 'Jane Smith',
         designation: 'Backend Developer',
         bio: 'Jane specializes in scalable backend systems.',
@@ -105,8 +112,9 @@ describe('AboutPage Integration', () => {
       vision: 'Our vision',
     });
 
-    mockedServices.getTeams.mockResolvedValue([
+    getTeamsMock.mockResolvedValue([
       {
+        id: 1,
         name: 'John Doe',
         designation: 'Frontend Developer',
         bio: 'Frontend developer.',
@@ -120,9 +128,17 @@ describe('AboutPage Integration', () => {
 
     render(page);
 
-    expect(mockedServices.getAbout).toHaveBeenCalledTimes(1);
-    expect(mockedServices.getVision).toHaveBeenCalledTimes(1);
-    expect(mockedServices.getTeams).toHaveBeenCalledTimes(1);
+    expect(
+      mockedServices.getAbout
+    ).toHaveBeenCalledTimes(1);
+
+    expect(
+      mockedServices.getVision
+    ).toHaveBeenCalledTimes(1);
+
+    expect(
+      mockedServices.teamService.getTeams
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('renders the correct number of team members', async () => {
@@ -134,8 +150,9 @@ describe('AboutPage Integration', () => {
       vision: 'Our vision',
     });
 
-    mockedServices.getTeams.mockResolvedValue([
+    getTeamsMock.mockResolvedValue([
       {
+        id: 1,
         name: 'John Doe',
         designation: 'Frontend Developer',
         bio: 'Frontend developer.',
@@ -144,6 +161,7 @@ describe('AboutPage Integration', () => {
         },
       },
       {
+        id: 2,
         name: 'Jane Smith',
         designation: 'Backend Developer',
         bio: 'Backend developer.',
@@ -152,6 +170,7 @@ describe('AboutPage Integration', () => {
         },
       },
       {
+        id: 3,
         name: 'Mike Wilson',
         designation: 'UI/UX Designer',
         bio: 'UI/UX designer.',
@@ -169,6 +188,4 @@ describe('AboutPage Integration', () => {
       screen.getAllByRole('article')
     ).toHaveLength(3);
   });
-
-
 });

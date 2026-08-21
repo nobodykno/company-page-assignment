@@ -1,9 +1,9 @@
 import ErrorView from '@/component/error-view';
 import Dashboard from './dashboard-view';
 import services from '@/services';
-
+/** Steps to render SSG */
 export const dynamic = 'force-static';
-
+/** Function to render dashboard page */
 export default async function DashboardPage() {
   let siteData;
 
@@ -11,9 +11,9 @@ export default async function DashboardPage() {
     const siteSetting = await services.getSiteSetting();
     const about = await services.getAbout();
     const servicesName = await services.getServices();
-    const teams = await services.getTeams();
+    const teams = await services.teamService.getTeams();
 
-    console.log('about',siteSetting);
+   
 
     siteData = {
       name: siteSetting.companyName,

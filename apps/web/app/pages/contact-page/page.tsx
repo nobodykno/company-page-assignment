@@ -5,6 +5,10 @@ import { useMutation } from '@tanstack/react-query';
 import services from '@/services';
 import ErrorView from '@/component/error-view';
 
+/**
+ * Form to send message to the company
+ * @returns succes when form is submitted successfully
+ */
 export default function ContactPage() {
   const [form, setForm] = useState({
     name: '',
@@ -31,13 +35,13 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="min-h-screen">
-      <section className="mx-auto max-w-3xl px-6 py-16">
-        <h1 className="text-4xl font-bold">
+    <main className="min-h-screen" aria-labelledby="contact-title">
+      <section aria-labelledby="contact-title" className="mx-auto max-w-3xl px-6 py-16">
+        <h1 id="contact-title" className="text-4xl font-bold">
           Contact Us
         </h1>
 
-        <p className="mt-3 text-[var(--color-text-secondary)]">
+        <p aria-label="Contact page description" className="mt-3 text-[var(--color-text-secondary)]">
           Have a question? Send us a message.
         </p>
 
@@ -62,6 +66,7 @@ export default function ContactPage() {
         )}
 
         <form
+          aria-label="Contact form"
           onSubmit={handleSubmit}
           className="mt-8 space-y-6"
         >

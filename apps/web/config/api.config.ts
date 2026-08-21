@@ -1,4 +1,7 @@
 
+/**
+ * Config file for API's
+ */
 import env from './env'; 
 
 export const API = {
@@ -26,6 +29,11 @@ export const API = {
       url: `${env.apiUrl}/team-members?populate=*`,
       method: 'GET',
     },
+
+    GET_TEAM_DETAIL : (id: number) => ({
+      url: `${env.apiUrl}/team-members?filters[id][$eq]=${id}&populate=*`,
+      method: 'GET',
+    }),
 
     GET_VISION: {
       url: `${env.apiUrl}/vision`,

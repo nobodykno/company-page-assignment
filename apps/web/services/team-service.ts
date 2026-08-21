@@ -23,4 +23,23 @@ const getTeams = async (): Promise<ITeamsResponse[]> => {
   return response;
 };
 
-export default getTeams;
+const getTeamDetail = async (id: number): Promise<ITeamsResponse[]> => {
+
+  const { url, method } = API.SITE_SETTINGS.GET_TEAM_DETAIL(id);
+  
+  const request:IHeaderDto ={
+    url:url,
+    method:method,
+    isFormData:false,
+    cache:'force-cache'
+  };
+  const response =  await httpService<ITeamsResponse[]>(request);
+  
+  return response;
+};
+
+const teamService = {
+  getTeams,
+  getTeamDetail,
+};
+export default teamService;

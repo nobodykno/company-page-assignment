@@ -4,11 +4,21 @@ import Footer from '@/app/components/footer-view';
 import env from '@/config/env';
 import { IBlogDetailProps } from '@/props/blog-detail-props';;
 import Link from 'next/link';
+
+
+/**Steps for ISG */
 export const revalidate = 60;
+
+/**
+ * 
+ * @param blogs  accept the data from the page to render the view
+ * @returns the blog detail page view
+ */
+
 export default function BlogDetailView(blog: IBlogDetailProps ) {
 
   return (
-    <main aria-labelledby="blog-title" className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]">
+    <main  aria-labelledby="blog-title" className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]">
       {/* Blog */}
       <article aria-labelledby="blog-title">
         {/* Hero */}
