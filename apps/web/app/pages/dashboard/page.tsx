@@ -13,7 +13,7 @@ export default async function DashboardPage() {
     const servicesName = await services.getServices();
     const teams = await services.getTeams();
 
-    // console.log('about',about);
+    console.log('about',siteSetting);
 
     siteData = {
       name: siteSetting.companyName,

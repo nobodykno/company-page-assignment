@@ -32,7 +32,7 @@ export default function ServicesView({
             >
               {/* Image */}
               <div className="h-48 bg-[var(--color-border)]">
-                {service.image ? (
+                {service.image && service.image.length ? (
                   <img
                     src={`${env.imageUrl}`+service.image[0].url}
                     alt={service.title}

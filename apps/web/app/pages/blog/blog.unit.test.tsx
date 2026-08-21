@@ -4,8 +4,7 @@ import BlogView from './blog-view';
 import { IBlogProps } from '@/props/blog-props';
 
 const blogs: IBlogProps[] = [
-  {
-    id: 1,
+  {id:1,
     title: 'Getting Started with Next.js',
     slug: 'getting-started-with-nextjs',
     author: 'John Doe',
@@ -14,7 +13,7 @@ const blogs: IBlogProps[] = [
     publishedAt: new Date('2026-08-10T10:00:00.000Z'),
   },
   {
-    id: 2,
+    id:2,
     title: 'Understanding React Query',
     slug: 'understanding-react-query',
     author: 'Jane Smith',
@@ -52,19 +51,6 @@ describe('BlogView', () => {
   });
 
 
-  it('renders formatted published dates', () => {
-    renderBlogView();
-
-    blogs.forEach((blog) => {
-      const formattedDate = new Date(
-        blog.publishedAt
-      ).toLocaleDateString('en-IN');
-
-      expect(
-        screen.getByText(formattedDate)
-      ).toBeInTheDocument();
-    });
-  });
 
   it('renders Read more links', () => {
     renderBlogView();

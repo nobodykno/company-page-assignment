@@ -57,7 +57,7 @@ export default function AboutView(aboutData: IAboutProps) {
                     <img
                       src={`${env.imageUrl}`+member.photo.url}
                       alt={member.name}
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-scale-down"
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center text-[var(--color-text-secondary)]">

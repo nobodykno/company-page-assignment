@@ -24,7 +24,7 @@ const getBlog = services.blogService
 
 const blogs: IBlogResponse[] = [
   {
-    id: 1,
+    id:1,
     title: 'Getting Started with Next.js',
     slug: 'getting-started-with-nextjs',
     author: 'John Doe',
@@ -36,7 +36,7 @@ const blogs: IBlogResponse[] = [
     },
   },
   {
-    id: 2,
+    id:2,
     title: 'Understanding React Query',
     slug: 'understanding-react-query',
     author: 'Jane Smith',

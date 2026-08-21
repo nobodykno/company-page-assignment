@@ -15,7 +15,7 @@ export default function BlogView({ blogs }: { blogs: IBlogProps[] }) {
     error,
   } = useQuery({
     queryKey: ['blogs'],
-    queryFn: services.getBlog,
+    queryFn: services.blogService.getBlog,
     initialData: blogs,
     staleTime: 60000,
   });
@@ -60,7 +60,7 @@ export default function BlogView({ blogs }: { blogs: IBlogProps[] }) {
               className="rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6"
             >
               <p className="text-[var(--font-size-xs)] text-[var(--color-text-secondary)]">
-                {new Date(blog.publishedAt).toLocaleDateString()}
+                {new Date(blog.publishedAt).toLocaleDateString('en-GB')}
               </p>
 
               <h2 className="mt-3 text-[var(--font-size-lg)] font-semibold">
@@ -76,7 +76,7 @@ export default function BlogView({ blogs }: { blogs: IBlogProps[] }) {
               </p>
 
               <Link
-                href={`/blog/${blog.slug}`}
+                href={`/pages/blog-detail?slug=${blog.slug}`}
                 className="mt-5 inline-block text-[var(--font-size-sm)] font-semibold text-[var(--color-primary)] hover:underline"
               >
                 Read more →

@@ -9,7 +9,7 @@ export default async function BlogPage() {
   let blogs: IBlogProps[];
 
   try {
-    blogs = await services.getBlog();
+    blogs = await services.blogService.getBlog();
   } catch (error) {
     return (
       <ErrorView

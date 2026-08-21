@@ -9,7 +9,7 @@ import { ISiteSettingResponse } from '@/types/site-setting';
 
 const getSiteSetting = async (): Promise<ISiteSettingResponse> => {
 
-  console.log('API CONFIG:', API.SITE_SETTINGS.GET_SITE);
+  
   const { url, method } = API.SITE_SETTINGS.GET_SITE;
   
   const request:IHeaderDto ={

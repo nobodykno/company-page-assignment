@@ -20,7 +20,7 @@ export default async function BlogDetailPage({
 
 
   try {
-    blogDetail = await services.blogService.getBlogById(slug);
+    blogDetail = await services.blogService.getBlogBySlug(slug);
   } catch (error) {
     return (
       <ErrorView

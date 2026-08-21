@@ -1,5 +1,6 @@
 
 
+import Footer from '@/app/components/footer-view';
 import env from '@/config/env';
 import { IBlogDetailProps } from '@/props/blog-detail-props';;
 import Link from 'next/link';
@@ -58,13 +59,7 @@ export default function BlogDetailView(blog: IBlogDetailProps ) {
       </article>
 
       {/* Footer */}
-      <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)]">
-        <div className="mx-auto max-w-6xl px-6 py-8">
-          <p className="text-[var(--font-size-sm)] text-[var(--color-text-secondary)]">
-            Digital Solutions — Building better digital experiences.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }

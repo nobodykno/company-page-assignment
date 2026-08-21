@@ -16,9 +16,18 @@ const blogDetail: IBlogDetailProps = {
   },
 };
 
+
+jest.mock('./../../components/footer-view', () => {
+  return function MockFooter() {
+    return <footer>Footer</footer>;
+  };
+});
+
 describe('BlogDetailView', () => {
-  it('renders the blog title', () => {
-    render(<BlogDetailView {...blogDetail} />);
+  it('renders the blog title', async () => {
+    const component = await BlogDetailView(blogDetail);
+
+    render(component);
 
     expect(
       screen.getByRole('heading', {
@@ -27,24 +36,30 @@ describe('BlogDetailView', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders the blog author', () => {
-    render(<BlogDetailView {...blogDetail} />);
+  it('renders the blog author', async () => {
+    const component = await BlogDetailView(blogDetail);
+
+    render(component);
 
     expect(
       screen.getByText(`By ${blogDetail.author}`)
     ).toBeInTheDocument();
   });
 
-  it('renders the blog content', () => {
-    render(<BlogDetailView {...blogDetail} />);
+  it('renders the blog content', async () => {
+    const component = await BlogDetailView(blogDetail);
+
+    render(component);
 
     expect(
       screen.getByText(blogDetail.content)
     ).toBeInTheDocument();
   });
 
-  it('renders the published date', () => {
-    render(<BlogDetailView {...blogDetail} />);
+  it('renders the published date', async () => {
+    const component = await BlogDetailView(blogDetail);
+
+    render(component);
 
     const formattedDate =
       blogDetail.publishedAt.toLocaleDateString('en-IN', {

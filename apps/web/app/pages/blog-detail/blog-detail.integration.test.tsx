@@ -8,14 +8,20 @@ jest.mock('@/services', () => ({
   __esModule: true,
   default: {
     blogService: {
-      getBlogById: jest.fn(),
+      getBlogBySlug: jest.fn(),
     },
   },
 }));
 
-const getBlogById = services.blogService
-  .getBlogById as jest.MockedFunction<
-  typeof services.blogService.getBlogById
+jest.mock('./../../components/footer-view', () => {
+  return function MockFooter() {
+    return <footer>Footer</footer>;
+  };
+});
+
+const getBlogBySlug = services.blogService
+  .getBlogBySlug as jest.MockedFunction<
+  typeof services.blogService.getBlogBySlug
 >;
 
 const blog: IBlogResponse = {
@@ -37,7 +43,7 @@ describe('BlogDetailPage Integration', () => {
   });
 
   it('fetches the blog by slug and renders the detail page', async () => {
-    getBlogById.mockResolvedValue([blog]);
+    getBlogBySlug.mockResolvedValue([blog]);
 
     const page = await BlogDetailPage({
       searchParams: Promise.resolve({
@@ -62,8 +68,8 @@ describe('BlogDetailPage Integration', () => {
     ).toBeInTheDocument();
   });
 
-  it('calls getBlogById with the slug', async () => {
-    getBlogById.mockResolvedValue([blog]);
+  it('calls getBlogBySlug with the slug', async () => {
+    getBlogBySlug.mockResolvedValue([blog]);
 
     const page = await BlogDetailPage({
       searchParams: Promise.resolve({
@@ -73,9 +79,9 @@ describe('BlogDetailPage Integration', () => {
 
     render(page);
 
-    expect(getBlogById).toHaveBeenCalledTimes(1);
+    expect(getBlogBySlug).toHaveBeenCalledTimes(1);
 
-    expect(getBlogById).toHaveBeenCalledWith(
+    expect(getBlogBySlug).toHaveBeenCalledWith(
       blog.slug
     );
   });
