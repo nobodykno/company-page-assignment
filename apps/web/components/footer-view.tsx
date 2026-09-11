@@ -1,9 +1,12 @@
+'use client';
+
 import Link from 'next/link';
-import services from '@/services';
+import { ROUTES } from '@/constants/routes';
+import { useSiteSettings } from '@/app/hooks/use-site-settings';
 
-export default async function Footer() {
+export default function Footer() {
 
-  const siteSetting = await services.getSiteSetting();
+  const siteSetting = useSiteSettings();
 
   return (
     <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)]">
@@ -13,7 +16,7 @@ export default async function Footer() {
         </p>
 
         <Link
-          href="/pages/contact-page"
+          href={ROUTES.CONTACT}
           className="text-[var(--font-size-sm)] font-semibold text-[var(--color-primary)] hover:opacity-80"
         >
           Contact Us

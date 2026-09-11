@@ -1,13 +1,12 @@
 
 
-import Footer from '@/app/components/footer-view';
+
 import env from '@/config/env';
+import { ROUTES } from '@/constants/routes';
 import { IBlogDetailProps } from '@/props/blog-detail-props';;
 import Link from 'next/link';
-
-
-/**Steps for ISG */
-export const revalidate = 60;
+import Image from 'next/image';
+import Footer from '@/components/footer-view';
 
 /**
  * 
@@ -25,7 +24,7 @@ export default function BlogDetailView(blog: IBlogDetailProps ) {
         <section aria-labelledby="blog-title"  className="border-b border-[var(--color-border)] bg-[var(--color-surface)]">
           <div className="mx-auto max-w-5xl px-6 py-16">
             <Link
-              href="/pages/blog"
+              href={`${ROUTES.BLOG}`}
               className="text-[var(--font-size-sm)] font-medium text-[var(--color-primary)] hover:underline"
             >
               ← Back to blogs
@@ -51,11 +50,12 @@ export default function BlogDetailView(blog: IBlogDetailProps ) {
 
         {/* Featured Image */}
         <section  className="mx-auto max-w-6xl px-6 py-12">
-          <div className="overflow-hidden rounded-[var(--border-radius)]">
-            <img
-              src= {`${env.imageUrl}`+blog.image.url}
+          <div className="relative overflow-hidden rounded-[var(--border-radius)] h-[300px] md:h-[500px]">
+            <Image
+              src={`/api/uploads/${blog.image.url.replace('/uploads/', '')}`}
               alt={blog.title}
-              className="h-[300px] w-full object-cover md:h-[500px]"
+              fill
+              className="object-cover"
             />
           </div>
         </section>

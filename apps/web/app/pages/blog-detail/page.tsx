@@ -1,9 +1,18 @@
 import services from '@/services';
-import ErrorView from '@/component/error-view';
+
 import BlogDetailView from './blog-detail-view';
 import { IBlogResponse } from '@/types/blog';
+import ErrorView from '@/components/error-view';
+/** Generate blog pages at build time */
+export async function generateStaticParams() {
+  const blogs = await services.blogService.getBlog();
 
-/** Steps to implement ISG */
+  return blogs.map((blog) => ({
+    slug: blog.slug,
+  }));
+}
+
+/** Revalidate generated pages every 60 seconds */
 export const revalidate = 60;
 
 

@@ -1,6 +1,6 @@
 import env from '@/config/env';
 import { ITeamMemberDetailProps } from '@/props/team-member-detail.props';
-
+import Image from 'next/image';
 
 export default function TeamMemberDetailView(
   member: ITeamMemberDetailProps
@@ -29,16 +29,17 @@ export default function TeamMemberDetailView(
         <div className="grid gap-10 md:grid-cols-[320px_1fr]">
           {/* Image */}
           <div>
-            <div className="h-80 overflow-hidden rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[var(--color-surface)]">
+            <div className="relative h-80 overflow-hidden rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[var(--color-surface)]">
               {member.photo ? (
-                <img
-                  src={`${env.imageUrl}${member.photo.url}`}
+                <Image
+                  src={`/api/uploads/${member.photo.url.replace('/uploads/', '')}`}
                   alt={member.name}
-                  className="h-full w-full object-cover"
+                  fill
+                  className="object-cover"
                 />
               ) : (
                 <div className="flex h-full items-center justify-center text-[var(--color-text-secondary)]">
-                  No Image
+      No Image
                 </div>
               )}
             </div>

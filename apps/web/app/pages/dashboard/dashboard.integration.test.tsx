@@ -9,17 +9,19 @@ jest.mock('@/services', () => ({
     getSiteSetting: jest.fn(),
     getAbout: jest.fn(),
     getServices: jest.fn(),
-    getTeams: jest.fn(),
+    teamService: {
+      getTeams: jest.fn(),
+    },
   },
 }));
 
-jest.mock('@/app/components/header-view', () => {
+jest.mock('@/components/header-view', () => {
   return function MockHeader() {
     return <header>Header</header>;
   };
 });
 
-jest.mock('@/app/components/footer-view', () => {
+jest.mock('@/components/footer-view', () => {
   return function MockFooter() {
     return (
       <footer>
@@ -45,8 +47,8 @@ const mockGetServices =
   >;
 
 const mockGetTeams =
-  services.getTeams as jest.MockedFunction<
-    typeof services.getTeams
+  services.teamService.getTeams as jest.MockedFunction<
+    typeof services.teamService.getTeams
   >;
 
 describe('DashboardPage Integration', () => {

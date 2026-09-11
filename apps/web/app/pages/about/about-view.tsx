@@ -1,6 +1,8 @@
-import env from '@/config/env';
+
+import { ROUTES } from '@/constants/routes';
 import { IAboutProps } from '@/props/about-props';
 import Link from 'next/link';
+import Image from 'next/image';
 
 /**
  * 
@@ -57,7 +59,7 @@ export default function AboutView(aboutData: IAboutProps) {
             {aboutData.team.map((member) => (
               <Link
                 key={member.id}
-                href={`/pages/team-member-detail?id=${member.id}`}
+                href={`${ROUTES.TEAM_MEMBER_DETAIL}?id=${member.id}`}
                 aria-label={`View ${member.name}'s profile`}
               >
                 <article
@@ -66,9 +68,11 @@ export default function AboutView(aboutData: IAboutProps) {
                   {/* Photo */}
                   <div className="mb-5 h-40 overflow-hidden rounded-[var(--border-radius)] bg-[var(--color-border)]">
                     {member.photo ? (
-                      <img
-                        src={`${env.imageUrl}${member.photo.url}`}
+                      <Image
+                        src={`/api/uploads/${member.photo.url.replace('/uploads/', '')}`}
                         alt={member.name}
+                        width={200}
+                        height={200}
                         className="h-full w-full object-scale-down"
                       />
                     ) : (

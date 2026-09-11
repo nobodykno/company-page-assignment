@@ -1,4 +1,4 @@
-import ErrorView from '@/component/error-view';
+import ErrorView from '@/components/error-view';
 import Dashboard from './dashboard-view';
 import services from '@/services';
 /** Steps to render SSG */
@@ -13,8 +13,6 @@ export default async function DashboardPage() {
     const servicesName = await services.getServices();
     const teams = await services.teamService.getTeams();
 
-   
-
     siteData = {
       name: siteSetting.companyName,
       footerText: siteSetting.footerText,
@@ -24,7 +22,6 @@ export default async function DashboardPage() {
       teams,
     };
   } catch (error) {
-    console.log(error);
     return (
       <ErrorView
         error={

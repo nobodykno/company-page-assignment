@@ -13,7 +13,7 @@ jest.mock('@/services', () => ({
   },
 }));
 
-jest.mock('./../../components/footer-view', () => {
+jest.mock('@/components/footer-view', () => {
   return function MockFooter() {
     return <footer>Footer</footer>;
   };

@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import services from '@/services';
-import ErrorView from '@/component/error-view';
+import ErrorView from '@/components/error-view';
 
 /**
  * Form to send message to the company
- * @returns succes when form is submitted successfully
+ * @returns success when form is submitted successfully
  */
 export default function ContactPage() {
   const [form, setForm] = useState({

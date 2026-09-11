@@ -1,6 +1,6 @@
 import services from '@/services';
 import ServicesView from './service-view';
-import ErrorView from '@/component/error-view';
+import ErrorView from '@/components/error-view';
 
 /** Steps to render SSG */
 export const dynamic = 'force-static';
@@ -11,7 +11,6 @@ export default async function ServicePage() {
 
   try {
     const serviceData = await services.getServices();
-
     servicePageData = {
       services: serviceData,
     };

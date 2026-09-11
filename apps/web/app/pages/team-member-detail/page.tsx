@@ -1,7 +1,17 @@
 import services from '@/services';
-import ErrorView from '@/component/error-view';
+
 import { ITeamsResponse } from '@/types/team';
 import TeamMemberDetailView from './team-member-detail-view';
+import { CACHE_DURATION } from '@/constants/cache';
+import ErrorView from '@/components/error-view';
+
+export async function generateStaticParams() {
+  const teamMembers = await services.teamService.getTeams();
+
+  return teamMembers.map((member) => ({
+    id: String(member.id),
+  }));
+}
 
 /** Steps to implement ISG */
 export const revalidate = 60;

@@ -1,31 +1,43 @@
 services:
+  cms:
+    build:
+      context: .
+      dockerfile: cms/Dockerfile
+
+    container_name: company-cms
+
+    restart: unless-stopped
+
+    ports:
+      - "1337:1337"
+
+    volumes:
+      - cms-data:/app/cms/data
+      - cms-public:/app/cms/public
+
+    networks:
+      - company-network
 
   web:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      args:
+        STRAPI_URL: http://host.docker.internal:1337/api
+
     container_name: company-web
+
     restart: unless-stopped
+
     expose:
       - "3000"
-    environment:
-      STRAPI_URL: http://cms:1337
+
+    env_file:
+      - .env.production
+
     depends_on:
       - cms
-    networks:
-      - company-network
 
-  cms:
-    build:
-      context: .
-      dockerfile: cms/Dockerfile
-    container_name: company-cms
-    restart: unless-stopped
-    expose:
-      - "1337"
-    volumes:
-      - cms-data:/app/cms/data
-      - cms-public:/app/cms/public
     networks:
       - company-network
 
@@ -33,13 +45,18 @@ services:
     build:
       context: .
       dockerfile: nginx/Dockerfile
+
     container_name: company-nginx
+
     restart: unless-stopped
+
     ports:
       - "3000:80"
+
     depends_on:
       - web
       - cms
+
     networks:
       - company-network
 
