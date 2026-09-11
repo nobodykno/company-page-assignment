@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import ErrorView from '@/component/error-view';
+import ErrorView from '@/components/error-view';
 import services from '@/services';
 import { IBlogProps } from '@/props/blog-props';
 import { useState } from 'react';
+import { ROUTES } from '@/constants/routes';
 
 /**
  * 
@@ -139,9 +140,8 @@ export default function BlogView({ blogs }: { blogs: IBlogProps[] }) {
                 </p>
 
                 <Link
-                  href={`/pages/blog-detail?slug=${blog.slug}`}
+                  href={`${ROUTES.BLOG_DETAIL}?slug=${blog.slug}`}
                   className="mt-5 inline-block text-[var(--font-size-sm)] font-semibold text-[var(--color-primary)] hover:underline"
-                  aria-label={`Read more about ${blog.title}`}
                 >
         Read more →
                 </Link>

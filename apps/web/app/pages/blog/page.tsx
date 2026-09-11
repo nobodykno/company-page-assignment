@@ -1,7 +1,10 @@
 import services from '@/services';
-import BlogView from './blog-view';
-import ErrorView from '@/component/error-view';
+
+
 import { IBlogProps } from '@/props/blog-props';
+import ErrorView from '@/components/error-view';
+import BlogView from './blog-view';
+import { CACHE_DURATION } from '@/constants/cache';
 
 /** Steps to implement ISG */
 export const revalidate = 60;

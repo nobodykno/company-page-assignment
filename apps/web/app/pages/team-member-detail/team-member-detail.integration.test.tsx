@@ -18,7 +18,7 @@ jest.mock('@/config/env', () => ({
   },
 }));
 
-jest.mock('../../../component/error-view', () => {
+jest.mock('@/components/error-view', () => {
   return function ErrorView({ error }: { error: string }) {
     return <div role="alert">{error}</div>;
   };

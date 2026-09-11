@@ -1,10 +1,11 @@
 
 
-import Footer from '@/app/components/footer-view';
-import Header from '@/app/components/header-view';
-import env from '@/config/env';
+
+
+import { ROUTES } from '@/constants/routes';
 import { DashboardProps } from '@/props/dashboard-props';
 import Link from 'next/link';
+import Image from 'next/image';
 
 /**
  * 
@@ -15,50 +16,62 @@ import Link from 'next/link';
 export default function Dashboard(siteData: DashboardProps) {
   return (
     <div  aria-label="Dashboard" className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]">
-      <Header />
 
       <main aria-labelledby="dashboard-title" >
         {/*  / Banner */}
         <section  aria-labelledby="dashboard-title" className="relative">
-          <div className="relative h-[500px] w-full">
-            <img
-              src={`${env.imageUrl}${siteData.companyBanner}`}
+          <div className="relative h-[500px] w-full overflow-hidden">
+            <Image
+              src={`/api/uploads/${siteData.companyBanner.replace('/uploads/', '')}`}
               alt={`${siteData.name} banner`}
-              className="h-full w-full object-cover"
+              fill
+              className="object-cover"
             />
 
             {/* Dark overlay */}
-            <div aria-hidden="true" className="absolute inset-0 bg-black/50" />
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-black/50"
+            />
 
-            {/*  content */}
+            {/* Content */}
             <div className="absolute inset-0">
               <div className="mx-auto flex h-full max-w-6xl items-center px-6">
                 <div className="max-w-3xl text-white">
-                  <p aria-label="Company welcome" className="mb-4 text-[var(--font-size-sm)] font-semibold uppercase tracking-wider text-white/80">
-                    Welcome
+                  <p
+                    aria-label="Company welcome"
+                    className="mb-4 text-[var(--font-size-sm)] font-semibold uppercase tracking-wider text-white/80"
+                  >
+          Welcome
                   </p>
 
-                  <h1 id="dashboard-title" className="text-[var(--font-size-title)] font-bold leading-tight">
+                  <h1
+                    id="dashboard-title"
+                    className="text-[var(--font-size-title)] font-bold leading-tight"
+                  >
                     {siteData.name}
                   </h1>
 
-                  <p aria-label="About the company" className="mt-6 text-[var(--font-size-lg)] leading-8 text-white/90">
+                  <p
+                    aria-label="About the company"
+                    className="mt-6 text-[var(--font-size-lg)] leading-8 text-white/90"
+                  >
                     {siteData.about}
                   </p>
 
                   <div className="mt-8 flex gap-4">
                     <Link
-                      href="/pages/services"
+                      href={ROUTES.SERVICES}
                       className="rounded-[var(--border-radius)] bg-[var(--color-primary)] px-6 py-3 text-[var(--font-size-sm)] font-semibold text-white hover:opacity-90"
                     >
-                      Explore Services
+            Explore Services
                     </Link>
 
                     <Link
-                      href="/pages/about"
+                      href={ROUTES.ABOUT}
                       className="rounded-[var(--border-radius)] border border-white/50 bg-white/10 px-6 py-3 text-[var(--font-size-sm)] font-semibold text-white hover:bg-white/20"
                     >
-                      About Us
+            About Us
                     </Link>
                   </div>
                 </div>
@@ -103,8 +116,6 @@ export default function Dashboard(siteData: DashboardProps) {
         </section>
       </main>
 
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }

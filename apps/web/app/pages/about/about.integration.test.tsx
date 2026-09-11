@@ -13,7 +13,7 @@ jest.mock('@/services', () => ({
   },
 }));
 
-jest.mock('@/component/error-view', () => ({
+jest.mock('@/components/error-view', () => ({
   __esModule: true,
   default: ({ error }: { error: string }) => (
     <div role="alert">{error}</div>

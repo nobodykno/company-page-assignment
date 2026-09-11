@@ -1,5 +1,6 @@
-import env from '@/config/env';
+
 import { IServiceProps } from '@/props/service-props';
+import Image from 'next/image';
 /**
  * 
  * @param service  accept the data from the page to render the view
@@ -35,16 +36,20 @@ export default function ServicesView({
               className="overflow-hidden rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[var(--color-surface)]"
             >
               {/* Image */}
-              <div aria-label="Service pricing" className="h-48 bg-[var(--color-border)]">
+              <div
+                aria-label="Service pricing"
+                className="relative h-48 overflow-hidden bg-[var(--color-border)]"
+              >
                 {service.image && service.image.length ? (
-                  <img
-                    src={`${env.imageUrl}`+service.image[0].url}
+                  <Image
+                    src={`/api/uploads/${service.image[0].url.replace('/uploads/', '')}`}
                     alt={service.title}
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center text-[var(--color-text-secondary)]">
-                    No Image
+      No Image
                   </div>
                 )}
               </div>

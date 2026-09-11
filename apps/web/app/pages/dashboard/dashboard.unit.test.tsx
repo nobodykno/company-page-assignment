@@ -3,22 +3,7 @@ import { render, screen } from '@testing-library/react';
 import Dashboard from './dashboard-view';
 import { DashboardProps } from '@/props/dashboard-props';
 
-// Mock async child components
-jest.mock('@/app/components/header-view', () => {
-  return function MockHeader() {
-    return <header>Header</header>;
-  };
-});
 
-jest.mock('@/app/components/footer-view', () => {
-  return function MockFooter() {
-    return (
-      <footer>
-        Digital Solutions — Building better digital experiences.
-      </footer>
-    );
-  };
-});
 
 const siteData: DashboardProps = {
   name: 'Digital Solutions',
@@ -123,24 +108,5 @@ describe('Dashboard', () => {
       ).toBeInTheDocument();
     });
   });
-
-  it('renders the header', () => {
-    render(<Dashboard {...siteData} />);
-
-    expect(
-      screen.getByRole('banner')
-    ).toHaveTextContent('Header');
-  });
-
-  it('renders the footer', () => {
-    render(<Dashboard {...siteData} />);
-
-    expect(
-      screen.getByRole('contentinfo')
-    ).toHaveTextContent(
-      'Digital Solutions — Building better digital experiences.'
-    );
-  });
-
 
 });

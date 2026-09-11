@@ -14,6 +14,10 @@ COPY . .
 
 RUN pnpm install --frozen-lockfile
 
+# Strapi URL available during Next.js build
+ARG STRAPI_URL
+ENV STRAPI_URL=$STRAPI_URL
+
 RUN pnpm --filter web build
 
 
@@ -33,7 +37,6 @@ COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
 COPY --from=builder /app/apps/web/package.json ./apps/web/package.json
 COPY --from=builder /app/apps/web/.next ./apps/web/.next
-COPY --from=builder /app/apps/web/public ./apps/web/public
 
 RUN pnpm install --prod --frozen-lockfile
 
