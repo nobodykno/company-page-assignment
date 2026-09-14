@@ -1,59 +1,134 @@
+
+import { TIMEOUT_DURATION } from '@/constants/cache';
 import handleResponse from '@/handler/request-handler';
 import { IHeaderDto } from '@/types/header';
 
-export const httpService = async <T>(
+
+type RequestBody = string | object;
+
+type RequestOptions = RequestInit & {
+  next?: {
+    revalidate?: number;
+  };
+};
+
+const createRequestOptions = (
   request: IHeaderDto,
-  body?: string | object
-): Promise<T> => {
-  const options: RequestInit & {
-    next?: {
-      revalidate?: number;
-    };
-  } = {
+  body?: RequestBody
+): RequestOptions => {
+  const options: RequestOptions = {
     method: request.method,
     signal: request.signal,
   };
-  // Next.js data caching
+
   if (request.cache) {
     options.cache = request.cache;
-  }  if (request.revalidate !== undefined) {
+  }
+
+  if (request.revalidate !== undefined) {
     options.next = {
       revalidate: request.revalidate,
     };
   }
 
-  if (body) {
-    options.body = JSON.stringify(body);
+  if (body !== undefined) {
+    options.body =
+      typeof body === 'string'
+        ? body
+        : JSON.stringify(body);
 
     options.headers = {
       'Content-Type': 'application/json',
     };
   }
 
+  return options;
+};
+
+const resolveBaseUrl = (): string => {
   const baseUrl =
     typeof window === 'undefined'
-      ? process.env.STRAPI_URL
+      ? process.env.NEXT_PUBLIC_STRAPI_URL
       : process.env.NEXT_PUBLIC_API_URL;
 
   if (!baseUrl) {
     throw new Error('API URL is not configured');
   }
 
-  /*
-   * request.url may already contain the server URL.
-   * Therefore only replace the base URL when needed.
-   */
-  let url = request.url;
+  return baseUrl;
+};
 
-  if (typeof window !== 'undefined') {
-    const serverUrl = process.env.STRAPI_URL;
+const resolveRequestUrl = (requestUrl: string): string => {
+  const baseUrl = resolveBaseUrl();
 
-    if (serverUrl && url.startsWith(serverUrl)) {
-      url = url.replace(serverUrl, baseUrl!);
-    }
+  if (typeof window === 'undefined') {
+    return requestUrl;
   }
 
-  const response = await fetch(url, options);
+  const serverUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
 
-  return handleResponse<T>(response);
+  if (serverUrl && requestUrl.startsWith(serverUrl)) {
+    return requestUrl.replace(serverUrl, baseUrl);
+  }
+
+  return requestUrl;
+};
+
+const createTimeoutController = (
+  signal?: AbortSignal
+): {
+  signal: AbortSignal;
+  timeoutId?: ReturnType<typeof setTimeout>;
+} => {
+  if (signal) {
+    return {
+      signal,
+    };
+  }
+
+  const controller = new AbortController();
+
+  const timeoutId = setTimeout(() => {
+    controller.abort();
+  }, TIMEOUT_DURATION.TIMEOUT_DURATION);
+
+  return {
+    signal: controller.signal,
+    timeoutId,
+  };
+};
+
+export const httpService = async <T>(
+  request: IHeaderDto,
+  body?: RequestBody
+): Promise<T> => {
+  const timeoutController = createTimeoutController(request.signal);
+
+  const options = {
+    ...createRequestOptions(request, body),
+    signal: timeoutController.signal,
+  };
+
+  const url = resolveRequestUrl(request.url);
+
+  try {
+    const response = await fetch(url, options);
+
+    return await handleResponse<T>(response);
+  } catch (error) {
+    if (
+      error instanceof DOMException &&
+      error.name === 'AbortError'
+    ) {
+      throw new Error(
+        'Request timed out or was cancelled.'
+      );
+    }
+
+    throw error;
+  } finally {
+    if (timeoutController.timeoutId) {
+      clearTimeout(timeoutController.timeoutId);
+    }
+  }
 };

@@ -59,7 +59,7 @@ export default function AboutView(aboutData: IAboutProps) {
             {aboutData.team.map((member) => (
               <Link
                 key={member.id}
-                href={`${ROUTES.TEAM_MEMBER_DETAIL}?id=${member.id}`}
+                href={`${ROUTES.TEAM_MEMBER_DETAIL}/${member.id}`}
                 aria-label={`View ${member.name}'s profile`}
               >
                 <article

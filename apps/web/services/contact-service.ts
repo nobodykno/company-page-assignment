@@ -17,7 +17,7 @@ const postContact = async (payload:IContact): Promise<IContact> => {
     url:url,
     method:method,
     isFormData:false,
-    cache:'force-cache'
+    cache: 'no-store',
   };
   const response =  await httpService<IContact>(request,{ data: payload });
   

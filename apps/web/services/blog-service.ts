@@ -2,6 +2,7 @@ import { API } from '@/config/api.config';
 import { httpService } from './base.service';
 import { IHeaderDto } from '@/types/header';
 import { IBlogResponse } from '@/types/blog';
+import { CACHE_DURATION } from '@/constants/cache';
 
 
 
@@ -14,7 +15,7 @@ const getBlog = async (): Promise<IBlogResponse[]> => {
     method:method,
     isFormData:false,
     cache:'force-cache',
-    revalidate: 60
+    revalidate: CACHE_DURATION.REVALIDATE_TIME
   };
   const response =  await httpService<IBlogResponse[]>(request);
   
@@ -31,7 +32,7 @@ const getBlogBySlug = async (slug: string): Promise<IBlogResponse[]> => {
     method:method,
     isFormData:false,
     cache:'force-cache',
-    revalidate: 60
+    revalidate: CACHE_DURATION.REVALIDATE_TIME,
   };
   const response =  await httpService<IBlogResponse[]>(request);
   

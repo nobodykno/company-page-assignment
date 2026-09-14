@@ -7,6 +7,7 @@ import services from '@/services';
 import { IBlogProps } from '@/props/blog-props';
 import { useState } from 'react';
 import { ROUTES } from '@/constants/routes';
+import Loading from '@/components/loading-view';
 
 /**
  * 
@@ -33,9 +34,7 @@ export default function BlogView({ blogs }: { blogs: IBlogProps[] }) {
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-6xl px-6 py-16">
-        <p>Loading blogs...</p>
-      </div>
+      <Loading/>
     );
   }
 
@@ -140,7 +139,7 @@ export default function BlogView({ blogs }: { blogs: IBlogProps[] }) {
                 </p>
 
                 <Link
-                  href={`${ROUTES.BLOG_DETAIL}?slug=${blog.slug}`}
+                  href={`${ROUTES.BLOG_DETAIL}/${blog.slug}`}
                   className="mt-5 inline-block text-[var(--font-size-sm)] font-semibold text-[var(--color-primary)] hover:underline"
                 >
         Read more →

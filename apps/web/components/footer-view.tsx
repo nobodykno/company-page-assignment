@@ -12,7 +12,7 @@ export default function Footer() {
     <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)]">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-8">
         <p className="text-[var(--font-size-sm)] text-[var(--color-text-secondary)]">
-          {siteSetting.footerText}
+          {siteSetting.settings.footerText}
         </p>
 
         <Link

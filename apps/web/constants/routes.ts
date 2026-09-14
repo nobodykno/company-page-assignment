@@ -5,6 +5,6 @@ export const ROUTES = {
   SERVICES: '/pages/services',
   BLOG: '/pages/blog',
   CONTACT: '/pages/contact-page',
-  BLOG_DETAIL: '/pages/blog-detail',
+  BLOG_DETAIL: '/pages/blog',
   TEAM_MEMBER_DETAIL: '/pages/team-member-detail',
 } as const;

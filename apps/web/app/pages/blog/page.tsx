@@ -4,7 +4,22 @@ import services from '@/services';
 import { IBlogProps } from '@/props/blog-props';
 import ErrorView from '@/components/error-view';
 import BlogView from './blog-view';
-import { CACHE_DURATION } from '@/constants/cache';
+import { Metadata } from 'next/types';
+
+
+/** SEO metadata */
+export const metadata: Metadata = {
+  title: 'Blog | Digital Solutions',
+  description:
+    'Explore the latest insights, trends, and practical tips in technology, digital solutions, and business growth.',
+  openGraph: {
+    title: 'Blog | Digital Solutions',
+    description:
+      'Explore the latest insights, trends, and practical tips in technology, digital solutions, and business growth.',
+    type: 'website',
+  },
+};
+
 
 /** Steps to implement ISG */
 export const revalidate = 60;

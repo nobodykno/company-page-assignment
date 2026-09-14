@@ -1,12 +1,10 @@
 
 
 
-import env from '@/config/env';
 import { ROUTES } from '@/constants/routes';
 import { IBlogDetailProps } from '@/props/blog-detail-props';;
 import Link from 'next/link';
 import Image from 'next/image';
-import Footer from '@/components/footer-view';
 
 /**
  * 
@@ -68,8 +66,6 @@ export default function BlogDetailView(blog: IBlogDetailProps ) {
         </section>
       </article>
 
-      {/* Footer */}
-      <Footer />
     </main>
   );
 }
