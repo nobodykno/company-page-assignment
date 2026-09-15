@@ -1,10 +1,14 @@
 
 import { TIMEOUT_DURATION } from '@/constants/cache';
-import handleResponse from '@/handler/request-handler';
+import handleResponse, {
+  handlePaginatedResponse,
+} from '@/handler/request-handler';
 import { IHeaderDto } from '@/types/header';
+import { IPaginatedResult } from '@/types/pagination';
 
 
-type RequestBody = string | object;
+
+type RequestBody = string | object | FormData;
 
 type RequestOptions = RequestInit & {
   next?: {
@@ -32,14 +36,20 @@ const createRequestOptions = (
   }
 
   if (body !== undefined) {
-    options.body =
-      typeof body === 'string'
-        ? body
-        : JSON.stringify(body);
+    if (request.isFormData) {
+      // Let the browser/runtime set the multipart boundary itself -
+      // never JSON-encode or set Content-Type for FormData payloads.
+      options.body = body as FormData;
+    } else {
+      options.body =
+        typeof body === 'string'
+          ? body
+          : JSON.stringify(body);
 
-    options.headers = {
-      'Content-Type': 'application/json',
-    };
+      options.headers = {
+        'Content-Type': 'application/json',
+      };
+    }
   }
 
   return options;
@@ -98,9 +108,13 @@ const createTimeoutController = (
   };
 };
 
-export const httpService = async <T>(
+// Shared by both variants below: build the request, fire it with the
+// timeout/abort handling, and hand the raw Response to whichever
+// response-shaping function the caller needs.
+const performFetch = async <T>(
   request: IHeaderDto,
-  body?: RequestBody
+  body: RequestBody | undefined,
+  onResponse: (response: Response) => Promise<T>
 ): Promise<T> => {
   const timeoutController = createTimeoutController(request.signal);
 
@@ -114,7 +128,7 @@ export const httpService = async <T>(
   try {
     const response = await fetch(url, options);
 
-    return await handleResponse<T>(response);
+    return await onResponse(response);
   } catch (error) {
     if (
       error instanceof DOMException &&
@@ -132,3 +146,17 @@ export const httpService = async <T>(
     }
   }
 };
+
+export const httpService = async <T>(
+  request: IHeaderDto,
+  body?: RequestBody
+): Promise<T> => performFetch(request, body, handleResponse<T>);
+
+// For list endpoints called with page/pageSize params, where the
+// caller needs Strapi's pagination meta (page count, total) back
+// alongside the items - not just the bare array handleResponse returns.
+export const httpServicePaginated = async <T>(
+  request: IHeaderDto,
+  body?: RequestBody
+): Promise<IPaginatedResult<T>> =>
+  performFetch(request, body, handlePaginatedResponse<T>);

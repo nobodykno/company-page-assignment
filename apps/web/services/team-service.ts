@@ -1,9 +1,10 @@
 
 
 import { API } from '@/config/api.config';
-import { httpService } from './base.service';
+import { httpService, httpServicePaginated } from './base.service';
 import { IHeaderDto } from '@/types/header';
 import { ITeamsResponse } from '@/types/team';
+import { IPaginatedResult } from '@/types/pagination';
 ;
 
 
@@ -38,8 +39,29 @@ const getTeamDetail = async (id: number): Promise<ITeamsResponse[]> => {
   return response;
 };
 
+const getTeamsPaginated = async (
+  page: number,
+  pageSize: number
+): Promise<IPaginatedResult<ITeamsResponse>> => {
+
+  const { url, method } = API.SITE_SETTINGS.GET_TEAM_PAGINATED(
+    page,
+    pageSize
+  );
+
+  const request: IHeaderDto = {
+    url: url,
+    method: method,
+    isFormData: false,
+    cache: 'force-cache',
+  };
+
+  return httpServicePaginated<ITeamsResponse>(request);
+};
+
 const teamService = {
   getTeams,
   getTeamDetail,
+  getTeamsPaginated
 };
 export default teamService;

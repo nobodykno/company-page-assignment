@@ -7,24 +7,25 @@ import {
 import BlogPage from './page';
 import services from '@/services';
 import { IBlogResponse } from '@/types/blog';
+import { IPaginatedResult } from '@/types/pagination';
 
 jest.mock('@/services', () => ({
   __esModule: true,
   default: {
     blogService: {
-      getBlog: jest.fn(),
+      getBlogPaginated: jest.fn(),
     },
   },
 }));
 
-const getBlog = services.blogService
-  .getBlog as jest.MockedFunction<
-  typeof services.blogService.getBlog
->;
+const getBlogPaginated =
+  services.blogService.getBlogPaginated as jest.MockedFunction<
+    typeof services.blogService.getBlogPaginated
+  >;
 
 const blogs: IBlogResponse[] = [
   {
-    id:1,
+    id: 1,
     title: 'Getting Started with Next.js',
     slug: 'getting-started-with-nextjs',
     author: 'John Doe',
@@ -36,7 +37,7 @@ const blogs: IBlogResponse[] = [
     },
   },
   {
-    id:2,
+    id: 2,
     title: 'Understanding React Query',
     slug: 'understanding-react-query',
     author: 'Jane Smith',
@@ -48,6 +49,16 @@ const blogs: IBlogResponse[] = [
     },
   },
 ];
+
+const paginatedBlogs: IPaginatedResult<IBlogResponse> = {
+  data: blogs,
+  pagination: {
+    page: 1,
+    pageSize: 2,
+    pageCount: 1,
+    total: 2,
+  },
+};
 
 const renderPage = async () => {
   const page = await BlogPage();
@@ -63,7 +74,7 @@ const renderPage = async () => {
   return render(
     <QueryClientProvider client={queryClient}>
       {page}
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 };
 
@@ -73,28 +84,28 @@ describe('BlogPage Integration', () => {
   });
 
   it('fetches blogs and renders them', async () => {
-    getBlog.mockResolvedValue(blogs);
+    getBlogPaginated.mockResolvedValue(paginatedBlogs);
 
     await renderPage();
 
     expect(
       screen.getByRole('heading', {
         name: 'Getting Started with Next.js',
-      })
+      }),
     ).toBeInTheDocument();
 
     expect(
       screen.getByRole('heading', {
         name: 'Understanding React Query',
-      })
+      }),
     ).toBeInTheDocument();
   });
 
   it('calls the blog service', async () => {
-    getBlog.mockResolvedValue(blogs);
+    getBlogPaginated.mockResolvedValue(paginatedBlogs);
 
     await renderPage();
 
-    expect(getBlog).toHaveBeenCalledTimes(1);
+    expect(getBlogPaginated).toHaveBeenCalledTimes(1);
   });
 });

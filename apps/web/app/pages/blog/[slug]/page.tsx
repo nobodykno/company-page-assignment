@@ -5,6 +5,11 @@ import { IBlogResponse } from '@/types/blog';
 import ErrorView from '@/components/error-view';
 import { Metadata } from 'next/types';
 import NotFoundView from '@/components/not-found-view';
+
+/** Revalidate generated pages every 60 seconds */
+export const revalidate = 60;
+
+
 /** Generate blog pages at build time */
 export async function generateStaticParams() {
   const blogs = await services.blogService.getBlog();
@@ -68,11 +73,10 @@ export async function generateMetadata({
   };
 }
 
-/** Revalidate generated pages every 60 seconds */
-export const revalidate = 60;
 
 
-/** functions to render the view */
+
+
 /** functions to render the view */
 export default async function BlogDetailPage({
   params,

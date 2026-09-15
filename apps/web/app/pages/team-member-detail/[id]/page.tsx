@@ -5,6 +5,10 @@ import { ITeamsResponse } from '@/types/team';
 import TeamMemberDetailView from './team-member-detail-view';
 import ErrorView from '@/components/error-view';
 import NotFoundView from '@/components/not-found-view';
+import { notFound } from 'next/navigation';
+
+/** Steps to implement ISG */
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   const teamMembers = await services.teamService.getTeams();
@@ -21,12 +25,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
 
-  if (!id) {
+  if (!/^[1-9]\d*$/.test(id)) {
     return {
       title: 'Team Member Not Found',
     };
   }
-
   try {
     const teamMemberDetail =
       await services.teamService.getTeamDetail(Number(id));
@@ -69,8 +72,7 @@ export async function generateMetadata({
   }
 }
 
-/** Steps to implement ISG */
-export const revalidate = 60;
+
 
 /** Steps to implement Team member Detail Page */
 export default async function TeamMemberDetailPage({
@@ -80,11 +82,9 @@ export default async function TeamMemberDetailPage({
 }) {
   const { id } = await params;
 
-  if (!id) {
-    return (
-      <NotFoundView message='Team member not found' title='Team member' />
-    );
-  }
+  if (!id || !/^[1-9]\d*$/.test(id)) { 
+    notFound();
+  };
 
   let teamMemberDetail: ITeamsResponse[];
 

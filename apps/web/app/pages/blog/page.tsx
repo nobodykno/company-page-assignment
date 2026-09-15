@@ -1,11 +1,15 @@
+
+import type { Metadata } from 'next';
+
 import services from '@/services';
 
-
 import { IBlogProps } from '@/props/blog-props';
+import { IPaginatedResult } from '@/types/pagination';
+
 import ErrorView from '@/components/error-view';
 import BlogView from './blog-view';
-import { Metadata } from 'next/types';
 
+import { PAGE_SIZE } from '@/constants/pagination';
 
 /** SEO metadata */
 export const metadata: Metadata = {
@@ -20,17 +24,17 @@ export const metadata: Metadata = {
   },
 };
 
-
-/** Steps to implement ISG */
+/** ISR - revalidate page every 60 seconds */
 export const revalidate = 60;
 
-/** Function to render the view */
-
 export default async function BlogPage() {
-  let blogs: IBlogProps[];
+  let blogs: IPaginatedResult<IBlogProps>;
 
   try {
-    blogs = await services.blogService.getBlog();
+    blogs = await services.blogService.getBlogPaginated(
+      1,
+      PAGE_SIZE.BLOG_LIST,
+    );
   } catch (error) {
     return (
       <ErrorView
@@ -43,5 +47,11 @@ export default async function BlogPage() {
     );
   }
 
-  return <BlogView blogs={blogs} />;
+  return (
+    <BlogView
+      initialBlogs={blogs.data}
+      initialPagination={blogs.pagination}
+    />
+  );
 }
+

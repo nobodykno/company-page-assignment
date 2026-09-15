@@ -2,6 +2,7 @@ import services from '@/services';
 import AboutView from './about-view';
 import ErrorView from '@/components/error-view';
 import { Metadata } from 'next';
+import { PAGE_SIZE } from '@/constants/pagination';
 
 /** Conditon to implement SSG */
 export const dynamic = 'force-static';
@@ -16,8 +17,11 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+
+
 /** View for about Page */
 export default async function AboutPage() {
+
   let aboutPageData;
 
   try {
@@ -25,13 +29,16 @@ export default async function AboutPage() {
     const [about, vision, teams] = await Promise.all([
       services.getAbout(),
       services.getVision(),
-      services.teamService.getTeams(),
+      services.teamService.getTeamsPaginated(1, PAGE_SIZE.TEAM_LIST),
     ]);
+
+
     
     aboutPageData = {
       about: about.about,
       vision: vision.vision,
-      team: teams,
+      team: teams.data,
+      teamPagination: teams.pagination,
     };
   } catch (error) {
     return (
@@ -47,3 +54,4 @@ export default async function AboutPage() {
 
   return <AboutView {...aboutPageData} />;
 }
+
