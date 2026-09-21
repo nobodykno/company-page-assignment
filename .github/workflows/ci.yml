@@ -1,4 +1,3 @@
-
 name: CI
 
 on:
@@ -39,6 +38,26 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Start Strapi
+        run: |
+          pnpm --filter cms develop > strapi.log 2>&1 &
+
+      - name: Wait for Strapi
+        run: |
+          for i in {1..30}; do
+            if curl -sf http://localhost:1337/api >/dev/null; then
+              echo "Strapi is ready"
+              exit 0
+            fi
+
+            echo "Waiting for Strapi..."
+            sleep 2
+          done
+
+          echo "Strapi failed to start"
+          cat strapi.log
+          exit 1
+
       - name: Build
         run: pnpm build
         env:
@@ -51,4 +70,3 @@ jobs:
 
       - name: Test
         run: pnpm test
-
