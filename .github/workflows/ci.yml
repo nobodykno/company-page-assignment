@@ -1,29 +1,46 @@
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
+name: CI
 
-  - name: Setup pnpm
-    uses: pnpm/action-setup@v4
-    with:
-      version: 11.20.0
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
 
-  - name: Setup Node.js
-    uses: actions/setup-node@v4
-    with:
-      node-version: 22
-      cache: pnpm
+  push:
+    branches:
+      - main
+      - develop
 
-  - name: Install dependencies
-    run: pnpm install --frozen-lockfile
+jobs:
+  ci:
+    runs-on: ubuntu-latest
 
-  - name: Lint
-    run: pnpm lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  - name: Build
-    run: pnpm build
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.20.0
 
-  - name: Typecheck
-    run: pnpm typecheck
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
 
-  - name: Test
-    run: pnpm test
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm build
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
