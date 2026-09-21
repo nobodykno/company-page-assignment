@@ -8,14 +8,17 @@
     "start": "next start",
     "test": "jest",
     "test:watch": "jest --watch",
+
     "lint": "eslint",
-    "analyze": "ANALYZE=true next build --webpack"
+    "analyze": "ANALYZE=true next build --webpack",
+    "zod": "^4.4.3"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.4",
     "next": "16.3.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^16.3.5",
@@ -28,6 +31,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
+    "eslint-plugin-no-relative-import-paths": "^1.7.3",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
     "tailwindcss": "^4",

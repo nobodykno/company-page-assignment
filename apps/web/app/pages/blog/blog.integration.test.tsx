@@ -1,13 +1,16 @@
+
 import { render, screen } from '@testing-library/react';
 import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
 
-import BlogPage from './page';
+import BlogPage, { metadata, revalidate } from './page';
 import services from '@/services';
+
 import { IBlogResponse } from '@/types/blog';
 import { IPaginatedResult } from '@/types/pagination';
+import { PAGE_SIZE } from '@/constants/pagination';
 
 jest.mock('@/services', () => ({
   __esModule: true,
@@ -18,7 +21,7 @@ jest.mock('@/services', () => ({
   },
 }));
 
-const getBlogPaginated =
+const getBlogPaginatedMock =
   services.blogService.getBlogPaginated as jest.MockedFunction<
     typeof services.blogService.getBlogPaginated
   >;
@@ -54,9 +57,9 @@ const paginatedBlogs: IPaginatedResult<IBlogResponse> = {
   data: blogs,
   pagination: {
     page: 1,
-    pageSize: 2,
+    pageSize: PAGE_SIZE.BLOG_LIST,
     pageCount: 1,
-    total: 2,
+    total: blogs.length,
   },
 };
 
@@ -83,29 +86,124 @@ describe('BlogPage Integration', () => {
     jest.clearAllMocks();
   });
 
-  it('fetches blogs and renders them', async () => {
-    getBlogPaginated.mockResolvedValue(paginatedBlogs);
+  describe('BlogPage', () => {
+    it('fetches blogs and renders them', async () => {
+      getBlogPaginatedMock.mockResolvedValue(
+        paginatedBlogs,
+      );
 
-    await renderPage();
+      await renderPage();
 
-    expect(
-      screen.getByRole('heading', {
-        name: 'Getting Started with Next.js',
-      }),
-    ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', {
+          name: 'Getting Started with Next.js',
+        }),
+      ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('heading', {
-        name: 'Understanding React Query',
-      }),
-    ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', {
+          name: 'Understanding React Query',
+        }),
+      ).toBeInTheDocument();
+    });
+
+    it('calls the blog service with the correct pagination parameters', async () => {
+      getBlogPaginatedMock.mockResolvedValue(
+        paginatedBlogs,
+      );
+
+      await renderPage();
+
+      expect(getBlogPaginatedMock).toHaveBeenCalledTimes(1);
+
+      expect(getBlogPaginatedMock).toHaveBeenCalledWith(
+        1,
+        PAGE_SIZE.BLOG_LIST,
+      );
+    });
+
+    it('passes the fetched blog data to the page', async () => {
+      getBlogPaginatedMock.mockResolvedValue(
+        paginatedBlogs,
+      );
+
+      await renderPage();
+
+      expect(
+        screen.getByRole('heading', {
+          name: 'Getting Started with Next.js',
+        }),
+      ).toBeInTheDocument();
+
+      expect(
+        screen.getByLabelText('Author: John Doe'),
+      ).toBeInTheDocument();
+
+      expect(
+        screen.getByRole('heading', {
+          name: 'Understanding React Query',
+        }),
+      ).toBeInTheDocument();
+
+      expect(
+        screen.getByLabelText('Author: Jane Smith'),
+      ).toBeInTheDocument();
+    });
+
+    it('renders the error view when fetching blogs fails', async () => {
+      getBlogPaginatedMock.mockRejectedValueOnce(
+        new Error('Failed to load blogs'),
+      );
+
+      await renderPage();
+
+      expect(
+        screen.getByText('Failed to load blogs'),
+      ).toBeInTheDocument();
+    });
   });
 
-  it('calls the blog service', async () => {
-    getBlogPaginated.mockResolvedValue(paginatedBlogs);
+  describe('BlogPage Metadata', () => {
+    it('contains the correct SEO metadata', () => {
+      expect(metadata).toEqual({
+        title: 'Blog | Digital Solutions',
+        description:
+          'Explore the latest insights, trends, and practical tips in technology, digital solutions, and business growth.',
+        openGraph: {
+          title: 'Blog | Digital Solutions',
+          description:
+            'Explore the latest insights, trends, and practical tips in technology, digital solutions, and business growth.',
+          type: 'website',
+        },
+      });
+    });
 
-    await renderPage();
+    it('contains the correct page title', () => {
+      expect(metadata.title).toBe(
+        'Blog | Digital Solutions',
+      );
+    });
 
-    expect(getBlogPaginated).toHaveBeenCalledTimes(1);
+    it('contains the correct description', () => {
+      expect(metadata.description).toBe(
+        'Explore the latest insights, trends, and practical tips in technology, digital solutions, and business growth.',
+      );
+    });
+
+    it('contains the correct Open Graph metadata', () => {
+      expect(metadata.openGraph).toEqual({
+        title: 'Blog | Digital Solutions',
+        description:
+          'Explore the latest insights, trends, and practical tips in technology, digital solutions, and business growth.',
+        type: 'website',
+      });
+    });
+  });
+
+  describe('ISR configuration', () => {
+    it('revalidates the page every 60 seconds', () => {
+      expect(revalidate).toBe(60);
+    });
   });
 });
+

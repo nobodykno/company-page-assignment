@@ -1,4 +1,6 @@
+
 import { render, screen } from '@testing-library/react';
+
 import services from '@/services';
 import ServicePage from './page';
 
@@ -16,6 +18,11 @@ jest.mock('@/config/env', () => ({
   },
 }));
 
+const getServicesMock =
+  services.getServices as jest.MockedFunction<
+    typeof services.getServices
+  >;
+
 describe('ServicePage Integration', () => {
   const mockServices = [
     {
@@ -30,7 +37,8 @@ describe('ServicePage Integration', () => {
     },
     {
       title: 'Mobile Development',
-      description: 'Mobile applications for iOS and Android.',
+      description:
+        'Mobile applications for iOS and Android.',
       price: '$700',
       image: [],
     },
@@ -40,66 +48,82 @@ describe('ServicePage Integration', () => {
     jest.clearAllMocks();
   });
 
-  it('should fetch services and render them', async () => {
-    (
-      services.getServices as jest.Mock
-    ).mockResolvedValue(mockServices);
+  describe('ServicePage', () => {
+    it('fetches services and renders the service page', async () => {
+      getServicesMock.mockResolvedValue(mockServices);
 
-    render(await ServicePage());
+      const page = await ServicePage();
 
-    expect(services.getServices).toHaveBeenCalledTimes(1);
+      render(page);
 
-    expect(
-      screen.getByRole('heading', {
-        name: 'Our Services',
-      })
-    ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', {
+          name: 'Our Services',
+        }),
+      ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('heading', {
-        name: 'Web Development',
-      })
-    ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', {
+          name: 'Web Development',
+        }),
+      ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('heading', {
-        name: 'Mobile Development',
-      })
-    ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', {
+          name: 'Mobile Development',
+        }),
+      ).toBeInTheDocument();
+    });
+
+    it('calls getServices once', async () => {
+      getServicesMock.mockResolvedValue(mockServices);
+
+      const page = await ServicePage();
+
+      render(page);
+
+      expect(getServicesMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('renders the fetched service data', async () => {
+      getServicesMock.mockResolvedValue(mockServices);
+
+      const page = await ServicePage();
+
+      render(page);
+
+      expect(
+        screen.getByText('Modern web applications.'),
+      ).toBeInTheDocument();
+
+      expect(
+        screen.getByText('$500'),
+      ).toBeInTheDocument();
+
+      expect(
+        screen.getByText(
+          'Mobile applications for iOS and Android.',
+        ),
+      ).toBeInTheDocument();
+
+      expect(
+        screen.getByText('$700'),
+      ).toBeInTheDocument();
+    });
+
+    it('renders ErrorView when getServices fails', async () => {
+      getServicesMock.mockRejectedValueOnce(
+        new Error('Failed to fetch services'),
+      );
+
+      const page = await ServicePage();
+
+      render(page);
+
+      expect(
+        screen.getByText('Failed to fetch services'),
+      ).toBeInTheDocument();
+    });
   });
-
-  it('should pass fetched services to ServicesView', async () => {
-    (
-      services.getServices as jest.Mock
-    ).mockResolvedValue(mockServices);
-
-    render(await ServicePage());
-
-    expect(
-      screen.getByText('Modern web applications.')
-    ).toBeInTheDocument();
-
-    expect(screen.getByText('$500')).toBeInTheDocument();
-
-    expect(
-      screen.getByText(
-        'Mobile applications for iOS and Android.'
-      )
-    ).toBeInTheDocument();
-
-    expect(screen.getByText('$700')).toBeInTheDocument();
-  });
-
-  it('should render ErrorView when getServices fails', async () => {
-    (
-      services.getServices as jest.Mock
-    ).mockRejectedValue(new Error('Failed to fetch services'));
-
-    render(await ServicePage());
-
-    expect(
-      screen.getByText('Failed to fetch services')
-    ).toBeInTheDocument();
-  });
-
 });
+
