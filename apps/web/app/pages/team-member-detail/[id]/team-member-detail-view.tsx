@@ -1,4 +1,4 @@
-import env from '@/config/env';
+
 import { ITeamMemberDetailProps } from '@/props/team-member-detail.props';
 import Image from 'next/image';
 

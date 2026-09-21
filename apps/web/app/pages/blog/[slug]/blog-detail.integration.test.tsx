@@ -46,7 +46,7 @@ describe('BlogDetailPage Integration', () => {
     getBlogBySlug.mockResolvedValue([blog]);
 
     const page = await BlogDetailPage({
-      searchParams: Promise.resolve({
+      params: Promise.resolve({
         slug: blog.slug,
       }),
     });
@@ -72,7 +72,7 @@ describe('BlogDetailPage Integration', () => {
     getBlogBySlug.mockResolvedValue([blog]);
 
     const page = await BlogDetailPage({
-      searchParams: Promise.resolve({
+      params: Promise.resolve({
         slug: blog.slug,
       }),
     });

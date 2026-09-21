@@ -40,6 +40,16 @@ export const API = {
       method: 'GET',
     }),
 
+    GET_BLOG_PAGINATED: (page: number, pageSize: number) => ({
+      url: `${API_BASE_URL}/blog-posts?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+      method: 'GET',
+    }),
+
+    GET_TEAM_PAGINATED: (page: number, pageSize: number) => ({
+      url: `${API_BASE_URL}/team-members?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+      method: 'GET',
+    }),
+
     GET_VISION: {
       url: `${API_BASE_URL}/vision`,
       method: 'GET',

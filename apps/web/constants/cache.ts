@@ -1,3 +1,9 @@
 export const CACHE_DURATION = {
   CLIENT_STALE_TIME_MS: 60_000,
+  REVALIDATE_TIME:60
+} as const;
+
+
+export const TIMEOUT_DURATION = {
+  TIMEOUT_DURATION: 10_000
 } as const;

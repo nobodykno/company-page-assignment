@@ -45,7 +45,7 @@ describe('TeamMemberDetailPage', () => {
     ).mockResolvedValue([mockTeamMember]);
 
     const page = await TeamMemberDetailPage({
-      searchParams: Promise.resolve({
+      params: Promise.resolve({
         id: '1',
       }),
     });

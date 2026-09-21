@@ -1,8 +1,9 @@
 
-import { ROUTES } from '@/constants/routes';
 import { IAboutProps } from '@/props/about-props';
-import Link from 'next/link';
-import Image from 'next/image';
+import PageTitle from '@/components/ui/page-title';
+import Container from '@/components/ui/container';
+import Card from '@/components/ui/card';
+import TeamSection from '@/components/teams/team-member';
 
 /**
  * 
@@ -16,35 +17,34 @@ export default function AboutView(aboutData: IAboutProps) {
 
       {/* Header */}
       <section aria-labelledby="about-page-title" className="border-b border-[var(--color-border)] bg-[var(--color-surface)]">
-        <div className="mx-auto max-w-6xl px-6 py-16">
-          <h1 id="about-page-title" className="text-[var(--font-size-title)] font-bold">
-            About Us
-          </h1>
-
-          <p      aria-describedby="about-page-title" className="mt-3 max-w-2xl text-[var(--font-size-md)] text-[var(--color-text-secondary)]">
-            {aboutData.about}
-          </p>
-        </div>
+        <PageTitle
+          title="About Us"
+          titleProps={{ id: 'about-page-title' }}
+          description={aboutData.about}
+          descriptionProps={{ 'aria-describedby': 'about-page-title' }}
+        />
       </section>
 
       {/* Mission & Vision */}
       <section   aria-labelledby="mission-vision-title" className="mx-auto max-w-6xl px-6 py-16">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div  className="rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[var(--color-surface)] p-8">
-            <h2 id="mission-vision-title" className="text-[var(--font-size-xl)] font-semibold">
-              Our Mission
-            </h2>
+        <Container className="py-16">
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card className="p-8">
+              <h2 id="mission-vision-title" className="text-[var(--font-size-xl)] font-semibold">
+                Our Mission
+              </h2>
 
-            <p className="mt-4 text-[var(--font-size-md)] leading-7 text-[var(--color-text-secondary)]">
-              {aboutData.vision}
-            </p>
+              <p className="mt-4 text-[var(--font-size-md)] leading-7 text-[var(--color-text-secondary)]">
+                {aboutData.vision}
+              </p>
+            </Card>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Team */}
       <section aria-labelledby="team-title" className="border-y border-[var(--color-border)] bg-[var(--color-surface)]">
-        <div className="mx-auto max-w-6xl px-6 py-16">
+        <Container className="py-16">
           <h2 id="team-title" className="text-[var(--font-size-title)] font-bold">
             Our Team
           </h2>
@@ -53,51 +53,11 @@ export default function AboutView(aboutData: IAboutProps) {
             Meet the people behind our work.
           </p>
 
-
-
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {aboutData.team.map((member) => (
-              <Link
-                key={member.id}
-                href={`${ROUTES.TEAM_MEMBER_DETAIL}?id=${member.id}`}
-                aria-label={`View ${member.name}'s profile`}
-              >
-                <article
-                  className="rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-6"
-                >
-                  {/* Photo */}
-                  <div className="mb-5 h-40 overflow-hidden rounded-[var(--border-radius)] bg-[var(--color-border)]">
-                    {member.photo ? (
-                      <Image
-                        src={`/api/uploads/${member.photo.url.replace('/uploads/', '')}`}
-                        alt={member.name}
-                        width={200}
-                        height={200}
-                        className="h-full w-full object-scale-down"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-[var(--color-text-secondary)]">
-              No Image
-                      </div>
-                    )}
-                  </div>
-
-                  <h3 className="text-[var(--font-size-lg)] font-semibold">
-                    {member.name}
-                  </h3>
-
-                  <p className="mt-1 text-[var(--font-size-sm)] font-medium text-[var(--color-primary)]">
-                    {member.designation}
-                  </p>
-
-                  <p className="mt-3 text-[var(--font-size-sm)] leading-6 text-[var(--color-text-secondary)]">
-                    {member.bio}
-                  </p>
-                </article>
-              </Link>
-            ))}
-          </div>
-        </div>
+          <TeamSection
+            initialTeam={aboutData.team}
+            initialPagination={aboutData.teamPagination}
+          />
+        </Container>
       </section>
     </main>
   );
