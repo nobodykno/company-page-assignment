@@ -3,7 +3,22 @@ console.log("process_env_param",process.env);
 const config: Core.Config.Middlewares = [
   'strapi::logger',
   'strapi::errors',
-  'strapi::security',
+  {
+    name: 'strapi::security',
+    config: {
+      contentSecurityPolicy: {
+        useDefaults: true,
+        directives: {
+          'connect-src': ["'self'", 'https:'],
+          'img-src': ["'self'", 'data:', 'blob:', 'https://cdn.jsdelivr.net'],
+          'media-src': ["'self'", 'data:', 'blob:'],
+          'script-src': ["'self'"],
+          'style-src': ["'self'", "'unsafe-inline'"],
+        },
+      },
+    },
+  },
+
   {
     name: 'strapi::cors',
     config: {

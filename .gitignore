@@ -176,3 +176,5 @@ build
 *.sql
 *.csv
 *.dat
+
+nginx/certs/*
