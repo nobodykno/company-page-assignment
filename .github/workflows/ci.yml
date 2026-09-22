@@ -59,7 +59,7 @@ jobs:
       - name: Wait for Strapi
         run: |
           for i in {1..30}; do
-            if curl -sf http://localhost:1337/api >/dev/null; then
+            if curl -sf http://localhost:1337/admin >/dev/null; then
               echo "Strapi is ready"
               exit 0
             fi
