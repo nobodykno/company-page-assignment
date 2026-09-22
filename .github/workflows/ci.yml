@@ -28,6 +28,7 @@ jobs:
 
       # Strapi database
       DATABASE_CLIENT: ${{ vars.DATABASE_CLIENT }}
+      DATABASE_FILENAME: .tmp/data.db
 
       # Strapi configuration
       CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}
@@ -54,6 +55,9 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+      - name: Clean Strapi database
+        run: |
+          rm -rf cms/.tmp
 
       # Start Strapi first because the seed script uses Strapi APIs.
       - name: Start Strapi
@@ -78,6 +82,13 @@ jobs:
 
       - name: Seed Strapi
         run: pnpm --filter cms seed
+
+      - name: Verify database
+        run: |
+          echo "DATABASE_CLIENT=$DATABASE_CLIENT"
+          echo "DATABASE_FILENAME=$DATABASE_FILENAME"
+          ls -lah cms/.tmp || true
+          ls -lah cms/.tmp/data.db || true
 
       - name: Verify Site Setting
         run: |
