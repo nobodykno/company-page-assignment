@@ -216,6 +216,103 @@ async function importAbout() {
   });
 }
 
+
+async function importBlogPosts() {
+  const blogPosts = [
+    {
+      title: 'Getting Started with Modern Web Development',
+      slug: 'modern-web',
+      author: 'John Carter',
+      date: '23/12/2026',
+      content: `Modern web development has changed significantly with the introduction of powerful frameworks, reusable components, and improved development tools. Businesses can now build websites and web applications that are faster, more responsive, accessible, and easier to maintain.
+
+A successful modern website starts with a strong foundation. Developers need to consider performance, responsive design, accessibility, security, and user experience from the beginning. Technologies such as React, Next.js, TypeScript, and modern CSS frameworks provide developers with the tools needed to create reliable digital experiences.
+
+Another important aspect of modern development is maintainability. Writing reusable components and keeping business logic separate from presentation logic makes applications easier to update and scale.
+
+Whether you are building a small business website or a large enterprise application, following modern development practices can help create a better experience for both users and developers.`,
+      image: 'web.jpg',
+    },
+
+    {
+      title: 'Why Businesses Need a Strong Digital Presence',
+      slug: 'why-businesses-need-strong-digital-presence',
+      author: 'Sarah Mitchell',
+      date: '24/12/2026',
+      content: `A strong digital presence has become an essential part of running a successful business. Customers increasingly use search engines, websites, social media, and online reviews to discover and evaluate companies before making a decision.
+
+A professional website provides businesses with a central place to communicate their services, values, and expertise. It also allows customers to learn about products, contact the business, and understand what makes the company different from its competitors.
+
+However, having a website alone is not enough. Businesses should focus on providing useful content, maintaining consistent branding, optimizing performance, and making their websites accessible across different devices.
+
+A well-planned digital strategy can help businesses reach new audiences, improve customer trust, and create opportunities for long-term growth.`,
+      image: '0x0.webp',
+    },
+
+    {
+      title: 'Building Better User Experiences with UI/UX Design',
+      slug: 'building-better-user-experiences-ui-ux',
+      author: 'Emily Johnson',
+      date: '24/12/2026',
+      content: `UI and UX design play an important role in how people interact with digital products. While visual design focuses on how an interface looks, user experience focuses on how easily and effectively users can accomplish their goals.
+
+Good design starts with understanding the target audience. Designers need to identify user needs, expectations, challenges, and common behaviors before creating an interface. This information can then be used to create simple navigation, clear layouts, and intuitive interactions.
+
+Consistency is another important part of good UI design. Using consistent typography, spacing, colors, buttons, and components helps users understand how a product works.
+
+A successful design should not only look attractive but should also be accessible, responsive, and easy to use. When businesses invest in good UI/UX design, they can improve customer satisfaction and create stronger digital products.`,
+      image: 'cyberblog.webp',
+    },
+
+    {
+      title: 'The Benefits of Cloud Technology for Businesses',
+      slug: 'benefits-of-cloud-technology-for-businesses',
+      author: 'Michael Anderson',
+      date: '26/12/2026',
+      content: `Cloud technology has transformed the way businesses build, deploy, and manage their digital applications. Instead of relying entirely on physical infrastructure, companies can use cloud platforms to access computing resources when they need them.
+
+One of the biggest benefits of cloud technology is scalability. Businesses can increase or decrease resources based on demand without making significant changes to their physical infrastructure.
+
+Cloud platforms can also improve collaboration by allowing teams to access applications and data from different locations. This is particularly useful for distributed teams and organizations that operate across multiple regions.
+
+When implemented correctly, cloud technology can help businesses improve flexibility, simplify infrastructure management, and support digital growth.`,
+      image: 'uiux.jpeg',
+    },
+
+    {
+      title: 'How APIs Connect Modern Applications',
+      slug: 'ow-apis-connect-modern-applications',
+      author: 'David Wilson',
+      date: '26/12/2026',
+      content: `Application Programming Interfaces, commonly known as APIs, allow different software systems to communicate with each other. They are an important part of modern application architecture and are commonly used to connect frontend applications with backend services.
+
+For example, a web application may request customer information from a backend API. The API processes the request, communicates with a database, and returns the required information to the frontend.
+
+Well-designed APIs make applications easier to maintain and integrate with other systems. They can also allow different teams to work independently on frontend and backend applications.
+
+Modern applications often use REST APIs, GraphQL, or other API technologies depending on their requirements. Choosing the right approach and designing clear API contracts can make applications more reliable and scalable.`,
+      image: 'web.jpg',
+    },
+  ];
+
+  for (const blog of blogPosts) {
+    const image = await importImage(blog.image, blog.title);
+
+    await createEntry({
+      model: 'blog-post',
+      entry: {
+        title: blog.title,
+        slug: blog.slug,
+        author: blog.author,
+        date: blog.date,
+        content: blog.content,
+        image,
+        publishedAt: Date.now(),
+      },
+    });
+  }
+}
+
 async function importCategories() {
   for (const category of categories) {
     await createEntry({ model: 'category', entry: category });
@@ -236,6 +333,177 @@ async function importAuthors() {
   }
 }
 
+ function getFileData(fileName) {
+  const filePath = path.join(__dirname, '../public/uploads', fileName);
+
+  const size = getFileSizeInBytes(filePath);
+  const ext = fileName.split('.').pop();
+  const mimeType = mime.lookup(ext || '') || '';
+
+  return {
+    filepath: filePath,
+    originalFileName: fileName,
+    size,
+    mimetype: mimeType,
+  };
+}
+
+async function importImage(fileName, name) {
+  const [file] = await checkFileExistsBeforeUpload([fileName]);
+
+  return file;
+}
+
+
+async function importSiteSetting() {
+  const companyBanner = await importImage(
+    'web_solutions_009d80d7e7.png',
+    'Digital Solutions company banner',
+  );
+
+  await createEntry({
+    model: 'site-setting',
+    entry: {
+      companyName: 'DIGITAL SOLUTIONS',
+      footerText: 'Made in India',
+      companyBanner,
+      publishedAt: Date.now(),
+    },
+  });
+}
+
+
+async function importAboutData() {
+  await createEntry({
+    model: 'about',
+    entry: {
+      about: `About Digital Solutions
+
+At Digital Solutions, we help businesses transform their ideas into reliable, scalable, and modern digital experiences. We combine technology, creativity, and business understanding to build solutions that solve real-world challenges and create long-term value.
+
+Our team works closely with clients to understand their goals, identify the right technology approach, and deliver solutions that are practical, secure, and easy to maintain. From web applications and cloud solutions to custom software development, we focus on delivering quality at every stage of the development process.`,
+      publishedAt: Date.now(),
+    },
+  });
+}
+
+
+async function importServices() {
+  const services = [
+    {
+      title: 'Web Development',
+      description:
+        'We build modern, responsive, and scalable websites and web applications tailored to your business goals, delivering excellent performance, security, and user experience across all devices.',
+      price: '$500',
+      image: 'web.jpg',
+    },
+    {
+      title: 'Mobile App Development',
+      description:
+        'We create fast, secure, and user-friendly mobile applications that help businesses engage customers, improve operations, and deliver seamless experiences across modern mobile platforms.',
+      price: '$700+',
+      image: 'mobile.jpg',
+    },
+    {
+      title: 'UI/UX Design',
+      description:
+        'We design intuitive and engaging digital experiences that combine attractive visuals, simple navigation, and user-focused interfaces aligned with your brand and business objectives.',
+      price: '$300+',
+      image: 'uiux.jpeg',
+    },
+    {
+      title: 'E-Commerce Solutions',
+      description:
+        'We build secure and scalable e-commerce platforms with smooth shopping experiences, product management, payment integration, and features designed to support your online business growth.',
+      price: '$800+',
+      image: 'solutions.webp',
+    },
+    {
+      title: 'API Development & Integration',
+      description:
+        'We build reliable APIs and integrate third-party services to connect applications, automate workflows, securely exchange data, and create seamless communication between your digital systems.',
+      price: '$400+',
+      image: 'What-is-an-API-Integration.png',
+    },
+  ];
+
+  for (const service of services) {
+    const image = await importImage(
+      service.image,
+      service.title,
+    );
+
+    await createEntry({
+      model: 'service',
+      entry: {
+        title: service.title,
+        description: service.description,
+        price: service.price,
+        image,
+        publishedAt: Date.now(),
+      },
+    });
+  }
+}
+
+
+async function importTeamMembers() {
+  const teamPhoto = await importImage(
+    'joelcoffman.jpg',
+    'Digital Solutions team member',
+  );
+
+  const teams = [
+    {
+      name: 'John Carter',
+      designation: 'Chief Executive Officer',
+      bio: 'John leads the company with a focus on innovation, business growth, and building long-term relationships with clients and partners.',
+    },
+    {
+      name: 'Sarah Mitchell',
+      designation: 'Project Manager',
+      bio: 'Sarah manages projects from planning to delivery, ensuring clear communication, smooth execution, and successful outcomes for clients.',
+    },
+    {
+      name: 'Emily Johnson',
+      designation: 'UI/UX Designer',
+      bio: 'Emily creates clean, intuitive, and user-friendly interfaces that combine strong visual design with excellent user experiences.',
+    },
+    {
+      name: 'Sophia Brown',
+      designation: 'Backend Developer',
+      bio: 'Sophia develops secure and scalable APIs and backend services while focusing on performance, reliability, and maintainable code.',
+    },
+    {
+      name: 'Daniel Thomas',
+      designation: 'Mobile App Developer',
+      bio: 'Daniel specializes in creating high-quality mobile applications with smooth user experiences and reliable functionality across platforms.',
+    },
+    {
+      name: 'James Taylor',
+      designation: 'QA Engineer',
+      bio: 'James ensures product quality by designing test strategies, identifying issues, and validating applications across different environments.',
+    },
+    {
+      name: 'Michael Anderson',
+      designation: 'Senior Full Stack Developer',
+      bio: 'Michael specializes in developing scalable web applications and backend systems using modern technologies and best development practices.',
+    },
+  ];
+
+  for (const team of teams) {
+    await createEntry({
+      model: 'team-member',
+      entry: {
+        name: team.name,
+        designation: team.designation,
+        bio: team.bio,
+        photo: teamPhoto,
+        publishedAt: Date.now(),
+      },
+    });
+  }
+}
 async function importSeedData() {
   // Allow read of application content types
   await setPublicPermissions({
@@ -258,6 +526,13 @@ async function importSeedData() {
   await importArticles();
   await importGlobal();
   await importAbout();
+
+await importSiteSetting();
+await importAboutData();
+await importServices();
+await importTeamMembers();
+await importBlogPosts();
+
 }
 
 async function main() {
