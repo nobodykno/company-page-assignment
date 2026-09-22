@@ -449,6 +449,16 @@ async function importServices() {
   }
 }
 
+async function importVisionData() {
+  await createEntry({
+    model: 'vision',
+    entry: {
+      vision: `At Digital Solutions, our vision is to empower businesses through innovative and reliable technology. We aim to create digital solutions that simplify complex processes, improve efficiency, enhance customer experiences, and help organizations achieve sustainable growth.
+
+We believe in combining modern technologies, thoughtful design, and business expertise to build scalable, secure, and future-ready solutions. Our goal is to continuously innovate and help businesses confidently adapt to an evolving digital world.`,
+    },
+  });
+}
 
 async function importTeamMembers() {
   const teamPhoto = await importImage(
@@ -513,7 +523,9 @@ async function importSeedData() {
     about: ['find', 'findOne'],
     service: ['find', 'findOne'],
     'team-member': ['find', 'findOne'],
+    'about-page': ['find', 'findOne'],
     'blog-post': ['find', 'findOne'],
+    'vision': ['find', 'findOne']
   });
 
   await importSiteSetting();
@@ -521,6 +533,7 @@ async function importSeedData() {
   await importServices();
   await importTeamMembers();
   await importBlogPosts();
+  await importVisionData();
 }
 
 async function main() {
