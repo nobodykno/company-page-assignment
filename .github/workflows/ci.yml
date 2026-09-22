@@ -13,19 +13,27 @@ jobs:
     environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
 
     env:
+      # Next.js
       NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
       NEXT_PUBLIC_STRAPI_URL: ${{ vars.NEXT_PUBLIC_STRAPI_URL }}
       NEXT_PUBLIC_IMAGE_URL: ${{ vars.NEXT_PUBLIC_IMAGE_URL }}
+
+      # Strapi secrets
       APP_KEYS: ${{ secrets.APP_KEYS }}
-      API_TOKEN_SALT: ${{ secrets.APP_KEYS }}
-      ADMIN_JWT_SECRET: ${{secrets.ADMIN_JWT_SECRET}}
+      API_TOKEN_SALT: ${{ secrets.API_TOKEN_SALT }}
+      ADMIN_JWT_SECRET: ${{ secrets.ADMIN_JWT_SECRET }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      TRANSFER_TOKEN_SALT: ${{secrets.TRANSFER_TOKEN_SALT }}
-      ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY}}
+      TRANSFER_TOKEN_SALT: ${{ secrets.TRANSFER_TOKEN_SALT }}
+      ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+
+      # Strapi database
       DATABASE_CLIENT: ${{ vars.DATABASE_CLIENT }}
+
+      # Strapi configuration
       CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}
       WINDOW_MS: ${{ vars.WINDOW_MS }}
       MAX_REQUESTS: ${{ vars.MAX_REQUESTS }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -47,13 +55,14 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      # Start Strapi first because the seed script uses Strapi APIs.
       - name: Start Strapi
         run: |
           pnpm --filter cms develop > strapi.log 2>&1 &
 
       - name: Wait for Strapi
         run: |
-          for i in {1..30}; do
+          for i in {1..60}; do
             if curl -sf http://localhost:1337/admin >/dev/null; then
               echo "Strapi is ready"
               exit 0
@@ -69,13 +78,27 @@ jobs:
 
       - name: Seed Strapi
         run: pnpm --filter cms seed
+
       - name: Verify Site Setting
         run: |
-          curl -f "http://localhost:1337/api/site-setting?populate=*"
+          curl --fail-with-body \
+            "http://localhost:1337/api/site-setting?populate=*"
 
-      - name: Build
+      - name: Verify Services
         run: |
-          curl -i http://localhost:1337/api/team-members
+          curl --fail-with-body \
+            "http://localhost:1337/api/services?populate=*"
+
+      - name: Verify Team Members
+        run: |
+          curl --fail-with-body \
+            "http://localhost:1337/api/team-members?populate=*"
+
+      - name: Verify Blog Posts
+        run: |
+          curl --fail-with-body \
+            "http://localhost:1337/api/blog-posts?populate=*"
+
       - name: Build
         run: pnpm build
 
