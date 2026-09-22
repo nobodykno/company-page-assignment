@@ -72,6 +72,9 @@ jobs:
           cat strapi.log
           exit 1
 
+      - name: Seed Strapi
+        run: node cms/scripts/seed.js
+
       - name: Build
         run: |
           curl -i http://localhost:1337/api/team-members
