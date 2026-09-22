@@ -126,7 +126,6 @@ jobs:
 
     environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
 
-
     env:
       NEXT_PUBLIC_SITE_URL: ${{ vars.DEPLOY_NEXT_PUBLIC_SITE_URL }}
       NEXT_PUBLIC_API_URL: ${{ vars.DEPLOY_NEXT_PUBLIC_API_URL }}
@@ -137,11 +136,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy with Docker Compose
+      - name: Stop existing containers
+        run: docker compose down
+
+      - name: Start Strapi
+        run: docker compose up -d --build cms
+
+      - name: Wait for Strapi
         run: |
-          docker compose down
-          docker compose up -d --build
+          for i in {1..60}; do
+            if curl -sf http://localhost:1337/admin >/dev/null; then
+              echo "Strapi is ready"
+              exit 0
+            fi
+
+            echo "Waiting for Strapi..."
+            sleep 2
+          done
+
+          echo "Strapi failed to start"
+          docker compose logs cms
+          exit 1
+
+      - name: Build and start Web and Nginx
+        run: docker compose up -d --build web nginx
 
       - name: Verify containers
-        run: |
-          docker compose ps
+        run: docker compose ps
