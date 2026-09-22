@@ -378,7 +378,7 @@ async function importSiteSetting() {
 
 async function importAboutData() {
   await createEntry({
-    model: 'about',
+    model: 'about-page',
     entry: {
       about: `About Digital Solutions
 
@@ -389,7 +389,6 @@ Our team works closely with clients to understand their goals, identify the righ
     },
   });
 }
-
 
 async function importServices() {
   const services = [
