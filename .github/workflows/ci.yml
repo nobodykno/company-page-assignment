@@ -22,7 +22,13 @@ jobs:
       NEXT_PUBLIC_STRAPI_URL: ${{ vars.NEXT_PUBLIC_STRAPI_URL }}
       NEXT_PUBLIC_IMAGE_URL: ${{ vars.NEXT_PUBLIC_IMAGE_URL }}
       APP_KEYS: ${{ secrets.APP_KEYS }}
-
+      API_TOKEN_SALT: ${{ secrets.APP_KEYS }}
+      ADMIN_JWT_SECRET: ${{secrets.ADMIN_JWT_SECRET}}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      TRANSFER_TOKEN_SALT: ${{secrets.TRANSFER_TOKEN_SALT }}
+      ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY}}
+      DATABASE_CLIENT: ${{ var.DATABASE_CLIENT }}
+      DATABASE_SSL: ${{false}}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
