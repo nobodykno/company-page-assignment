@@ -1,6 +1,7 @@
+
 import { render, screen } from '@testing-library/react';
 
-import AboutPage from './page';
+import AboutPage, { generateMetadata } from './page';
 import services from '@/services';
 import { PAGE_SIZE } from '@/constants/pagination';
 
@@ -88,74 +89,120 @@ describe('AboutPage Integration', () => {
     setupMocks();
   });
 
-  it('fetches and renders about page data', async () => {
-    const page = await AboutPage();
+  describe('AboutPage', () => {
+    it('fetches and renders about page data', async () => {
+      const page = await AboutPage();
 
-    render(page);
+      render(page);
 
-    expect(
-      screen.getByRole('heading', {
-        name: /about us/i,
-      }),
-    ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', {
+          name: /about us/i,
+        }),
+      ).toBeInTheDocument();
 
-    expect(
-      screen.getByText(
-        'We are a digital solutions company focused on building modern and scalable software applications.',
-      ),
-    ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'We are a digital solutions company focused on building modern and scalable software applications.',
+        ),
+      ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('heading', {
-        name: /our mission/i,
-      }),
-    ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', {
+          name: /our mission/i,
+        }),
+      ).toBeInTheDocument();
 
-    expect(
-      screen.getByText(
-        'Our vision is to help businesses grow through innovative technology and digital solutions.',
-      ),
-    ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Our vision is to help businesses grow through innovative technology and digital solutions.',
+        ),
+      ).toBeInTheDocument();
+    });
+
+    it('calls all required services', async () => {
+      const page = await AboutPage();
+
+      render(page);
+
+      expect(getAboutMock).toHaveBeenCalledTimes(1);
+
+      expect(getVisionMock).toHaveBeenCalledTimes(1);
+
+      expect(getTeamsPaginatedMock).toHaveBeenCalledTimes(1);
+
+      expect(getTeamsPaginatedMock).toHaveBeenCalledWith(
+        1,
+        PAGE_SIZE.TEAM_LIST,
+      );
+    });
+
+    it('renders all team members', async () => {
+      const page = await AboutPage();
+
+      render(page);
+
+      expect(
+        screen.getByRole('heading', {
+          name: 'John Doe',
+        }),
+      ).toBeInTheDocument();
+
+      expect(
+        screen.getByRole('heading', {
+          name: 'Jane Smith',
+        }),
+      ).toBeInTheDocument();
+
+      expect(
+        screen.getByRole('heading', {
+          name: 'Mike Johnson',
+        }),
+      ).toBeInTheDocument();
+    });
+
+    it('handles service errors', async () => {
+      getAboutMock.mockRejectedValueOnce(
+        new Error('Failed to load about data'),
+      );
+
+      const page = await AboutPage();
+
+      render(page);
+
+      expect(
+        screen.getByText('Failed to load about data'),
+      ).toBeInTheDocument();
+    });
   });
 
-  it('calls all required services', async () => {
-    const page = await AboutPage();
+  describe('generateMetadata', () => {
+    it('generates metadata using about content', async () => {
+      const metadata = await generateMetadata();
 
-    render(page);
+      expect(getAboutMock).toHaveBeenCalledTimes(1);
 
-    expect(getAboutMock).toHaveBeenCalledTimes(1);
+      expect(metadata).toEqual({
+        title: 'About | Digital Solutions',
+        description:
+          'We are a digital solutions company focused on building modern and scalable software applications.'.slice(
+            0,
+            160,
+          ),
+      });
+    });
 
-    expect(getVisionMock).toHaveBeenCalledTimes(1);
+    it('limits the description to 160 characters', async () => {
+      const longAbout = 'A'.repeat(300);
 
-    expect(getTeamsPaginatedMock).toHaveBeenCalledTimes(1);
+      getAboutMock.mockResolvedValueOnce({
+        about: longAbout,
+      });
 
-    expect(getTeamsPaginatedMock).toHaveBeenCalledWith(
-      1,
-      PAGE_SIZE.TEAM_LIST,
-    );
-  });
+      const metadata = await generateMetadata();
 
-  it('renders the correct number of team members', async () => {
-    const page = await AboutPage();
-
-    render(page);
-
-    expect(
-      screen.getByRole('heading', {
-        name: 'John Doe',
-      }),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('heading', {
-        name: 'Jane Smith',
-      }),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('heading', {
-        name: 'Mike Johnson',
-      }),
-    ).toBeInTheDocument();
+      expect(metadata.description).toHaveLength(160);
+      expect(metadata.description).toBe('A'.repeat(160));
+    });
   });
 });

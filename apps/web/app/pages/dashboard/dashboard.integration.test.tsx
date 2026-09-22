@@ -1,6 +1,7 @@
+
 import { render, screen } from '@testing-library/react';
 
-import DashboardPage from './page';
+import DashboardPage, { generateMetadata } from './page';
 import services from '@/services';
 
 jest.mock('@/services', () => ({
@@ -108,56 +109,139 @@ describe('DashboardPage Integration', () => {
     mockGetTeams.mockResolvedValue([]);
   });
 
-  it('fetches dashboard data and renders the page', async () => {
-    const page = await DashboardPage();
+  describe('DashboardPage', () => {
+    it('fetches dashboard data and renders the page', async () => {
+      const page = await DashboardPage();
 
-    render(page);
+      render(page);
 
-    expect(
-      screen.getByRole('heading', {
-        name: 'Digital Solutions',
-      })
-    ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', {
+          name: 'Digital Solutions',
+        }),
+      ).toBeInTheDocument();
 
-    expect(
-      screen.getByText(
-        'We provide modern and reliable technology solutions for businesses.'
-      )
-    ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'We provide modern and reliable technology solutions for businesses.',
+        ),
+      ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('img', {
-        name: 'Digital Solutions banner',
-      })
-    ).toBeInTheDocument();
+      expect(
+        screen.getByRole('img', {
+          name: 'Digital Solutions banner',
+        }),
+      ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('heading', {
-        name: 'Web Development',
-      })
-    ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', {
+          name: 'Web Development',
+        }),
+      ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('heading', {
-        name: 'Mobile Development',
-      })
-    ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', {
+          name: 'Mobile Development',
+        }),
+      ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('heading', {
-        name: 'UI/UX Design',
-      })
-    ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', {
+          name: 'UI/UX Design',
+        }),
+      ).toBeInTheDocument();
+    });
+
+    it('calls all required services', async () => {
+      const page = await DashboardPage();
+
+      render(page);
+
+      expect(mockGetSiteSetting).toHaveBeenCalledTimes(1);
+      expect(mockGetAbout).toHaveBeenCalledTimes(1);
+      expect(mockGetServices).toHaveBeenCalledTimes(1);
+      expect(mockGetTeams).toHaveBeenCalledTimes(1);
+    });
+
+    it('renders the error view when a service fails', async () => {
+      mockGetAbout.mockRejectedValueOnce(
+        new Error('Failed to load about data'),
+      );
+
+      const page = await DashboardPage();
+
+      render(page);
+
+      expect(
+        screen.getByText('Failed to load about data'),
+      ).toBeInTheDocument();
+    });
   });
 
-  it('calls all required services', async () => {
-    const page = await DashboardPage();
+  describe('generateMetadata', () => {
+    it('generates SEO metadata from site settings and about data', async () => {
+      const metadata = await generateMetadata();
 
-    render(page);
+      expect(mockGetSiteSetting).toHaveBeenCalledTimes(1);
+      expect(mockGetAbout).toHaveBeenCalledTimes(1);
 
-    expect(mockGetSiteSetting).toHaveBeenCalledTimes(1);
-    expect(mockGetAbout).toHaveBeenCalledTimes(1);
-    expect(mockGetServices).toHaveBeenCalledTimes(1);
-    expect(mockGetTeams).toHaveBeenCalledTimes(1);
+      expect(metadata).toEqual({
+        title: 'Digital Solutions',
+        description:
+          'We provide modern and reliable technology solutions for businesses.'.slice(
+            0,
+            160,
+          ),
+        alternates: {
+          canonical: '/pages/dashboard',
+        },
+        openGraph: {
+          title: 'Digital Solutions',
+          description:
+            'We provide modern and reliable technology solutions for businesses.'.slice(
+              0,
+              160,
+            ),
+          url: '/pages/dashboard',
+          type: 'website',
+        },
+        twitter: {
+          card: 'summary_large_image',
+          title: 'Digital Solutions',
+          description:
+            'We provide modern and reliable technology solutions for businesses.'.slice(
+              0,
+              160,
+            ),
+        },
+      });
+    });
+
+    it('limits the metadata description to 160 characters', async () => {
+      mockGetAbout.mockResolvedValueOnce({
+        about: 'A'.repeat(300),
+      });
+
+      const metadata = await generateMetadata();
+
+      expect(metadata.description).toHaveLength(160);
+      expect(metadata.description).toBe('A'.repeat(160));
+    });
+
+    it('returns fallback metadata when metadata services fail', async () => {
+      mockGetSiteSetting.mockRejectedValueOnce(
+        new Error('Failed to load site settings'),
+      );
+
+      const metadata = await generateMetadata();
+
+      expect(metadata).toEqual({
+        title: 'Digital Solutions',
+        description: 'Digital Solutions company website',
+        alternates: {
+          canonical: '/pages/dashboard',
+        },
+      });
+    });
   });
 });

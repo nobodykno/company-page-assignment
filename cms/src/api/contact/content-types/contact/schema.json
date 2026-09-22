@@ -12,13 +12,23 @@
   "pluginOptions": {},
   "attributes": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 38,
+      "regex": "^[A-Za-z]+(?: [A-Za-z]+)*$"
     },
     "email": {
-      "type": "string"
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 70,
+      "required": true,
+      "regex": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
     },
     "message": {
-      "type": "text"
+      "type": "text",
+      "minLength": 22,
+      "maxLength": 4000,
+      "regex": "^(?!.*<[^>]*>)(?!.*(?:javascript|vbscript|data):)(?!.*(?:<|>|&#|%3C|%3E))(?!.*[\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F\\u007F]).{1,1000}$"
     }
   }
 }

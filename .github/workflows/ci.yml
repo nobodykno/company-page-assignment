@@ -17,6 +17,12 @@ jobs:
 
     environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
 
+    env:
+      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+      NEXT_PUBLIC_STRAPI_URL: ${{ vars.NEXT_PUBLIC_STRAPI_URL }}
+      NEXT_PUBLIC_IMAGE_URL: ${{ vars.NEXT_PUBLIC_IMAGE_URL }}
+      APP_KEYS: ${{ secrets.APP_KEYS }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -60,10 +66,6 @@ jobs:
 
       - name: Build
         run: pnpm build
-        env:
-          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
-          NEXT_PUBLIC_STRAPI_URL: ${{ vars.NEXT_PUBLIC_STRAPI_URL }}
-          NEXT_PUBLIC_IMAGE_URL: ${{ vars.NEXT_PUBLIC_IMAGE_URL }}
 
       - name: Typecheck
         run: pnpm typecheck

@@ -1,6 +1,7 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
+import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
 
 export default defineConfig([
   ...nextVitals,
@@ -9,18 +10,32 @@ export default defineConfig([
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
 
+    plugins: {
+      'no-relative-import-paths': noRelativeImportPaths,
+    },
+
     rules: {
       // Formatting
-      'semi': ['error', 'always'],
-      'quotes': ['error', 'single'],
-      'indent': ['error', 2],
+      semi: ['error', 'always'],
+      quotes: ['error', 'single'],
+      indent: ['error', 2],
+
+      // Imports
+      'no-relative-import-paths/no-relative-import-paths': [
+        'error',
+        {
+          allowSameFolder: true,
+          rootDir: '.',
+          prefix: '@/',
+        },
+      ],
 
       // JavaScript
       'no-console': 'warn',
-      'eqeqeq': ['error', 'always'],
-      'curly': ['error', 'all'],
+      eqeqeq: ['error', 'always'],
+      curly: ['error', 'all'],
       'max-depth': ['error', 3],
-      'complexity': ['error', 10],
+      complexity: ['error', 10],
 
       // TypeScript
       '@typescript-eslint/no-explicit-any': 'warn',
