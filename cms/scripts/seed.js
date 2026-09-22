@@ -100,12 +100,15 @@ async function uploadFile(file, name) {
 // Create an entry and attach files if there are any
 async function createEntry({ model, entry }) {
   try {
-    // Actually create the entry in Strapi
-    await strapi.documents(`api::${model}.${model}`).create({
-      data: entry,
-    });
+    return await strapi
+      .documents(`api::${model}.${model}`)
+      .create({
+        data: entry,
+        status: 'published',
+      });
   } catch (error) {
-    console.error({ model, entry, error });
+    console.error(`Failed to create ${model}:`, error);
+    throw error;
   }
 }
 
@@ -231,7 +234,7 @@ A successful modern website starts with a strong foundation. Developers need to 
 Another important aspect of modern development is maintainability. Writing reusable components and keeping business logic separate from presentation logic makes applications easier to update and scale.
 
 Whether you are building a small business website or a large enterprise application, following modern development practices can help create a better experience for both users and developers.`,
-      image: 'web.jpg',
+      image: 'web_0e43d31241.jpg',
     },
 
     {
@@ -246,7 +249,7 @@ A professional website provides businesses with a central place to communicate t
 However, having a website alone is not enough. Businesses should focus on providing useful content, maintaining consistent branding, optimizing performance, and making their websites accessible across different devices.
 
 A well-planned digital strategy can help businesses reach new audiences, improve customer trust, and create opportunities for long-term growth.`,
-      image: '0x0.webp',
+      image: '0x0_cec8535c60.webp',
     },
 
     {
@@ -261,7 +264,7 @@ Good design starts with understanding the target audience. Designers need to ide
 Consistency is another important part of good UI design. Using consistent typography, spacing, colors, buttons, and components helps users understand how a product works.
 
 A successful design should not only look attractive but should also be accessible, responsive, and easy to use. When businesses invest in good UI/UX design, they can improve customer satisfaction and create stronger digital products.`,
-      image: 'cyberblog.webp',
+      image: 'cyberblog_4383ec0614.webp',
     },
 
     {
@@ -276,7 +279,7 @@ One of the biggest benefits of cloud technology is scalability. Businesses can i
 Cloud platforms can also improve collaboration by allowing teams to access applications and data from different locations. This is particularly useful for distributed teams and organizations that operate across multiple regions.
 
 When implemented correctly, cloud technology can help businesses improve flexibility, simplify infrastructure management, and support digital growth.`,
-      image: 'uiux.jpeg',
+      image: 'uiux_8d70151c30.jpeg',
     },
 
     {
@@ -291,7 +294,7 @@ For example, a web application may request customer information from a backend A
 Well-designed APIs make applications easier to maintain and integrate with other systems. They can also allow different teams to work independently on frontend and backend applications.
 
 Modern applications often use REST APIs, GraphQL, or other API technologies depending on their requirements. Choosing the right approach and designing clear API contracts can make applications more reliable and scalable.`,
-      image: 'web.jpg',
+      image: 'web_0e43d31241.jpg',
     },
   ];
 
@@ -349,9 +352,9 @@ async function importAuthors() {
 }
 
 async function importImage(fileName, name) {
-  const [file] = await checkFileExistsBeforeUpload([fileName]);
+  const files = await checkFileExistsBeforeUpload([fileName]);
 
-  return file;
+  return files;
 }
 
 
@@ -395,35 +398,35 @@ async function importServices() {
       description:
         'We build modern, responsive, and scalable websites and web applications tailored to your business goals, delivering excellent performance, security, and user experience across all devices.',
       price: '$500',
-      image: 'web.jpg',
+      image: 'web_0e43d31241.jpg',
     },
     {
       title: 'Mobile App Development',
       description:
         'We create fast, secure, and user-friendly mobile applications that help businesses engage customers, improve operations, and deliver seamless experiences across modern mobile platforms.',
       price: '$700+',
-      image: 'mobile.jpg',
+      image: 'mobile_3b2dd77f2b.jpg',
     },
     {
       title: 'UI/UX Design',
       description:
         'We design intuitive and engaging digital experiences that combine attractive visuals, simple navigation, and user-focused interfaces aligned with your brand and business objectives.',
       price: '$300+',
-      image: 'uiux.jpeg',
+      image: 'uiux_8d70151c30.jpeg',
     },
     {
       title: 'E-Commerce Solutions',
       description:
         'We build secure and scalable e-commerce platforms with smooth shopping experiences, product management, payment integration, and features designed to support your online business growth.',
       price: '$800+',
-      image: 'solutions.webp',
+      image: 'solutions_01d8f5e50c.webp',
     },
     {
       title: 'API Development & Integration',
       description:
         'We build reliable APIs and integrate third-party services to connect applications, automate workflows, securely exchange data, and create seamless communication between your digital systems.',
       price: '$400+',
-      image: 'What-is-an-API-Integration.png',
+      image: 'What_is_an_API_Integration_c0400b8983.png',
     },
   ];
 
@@ -449,7 +452,7 @@ async function importServices() {
 
 async function importTeamMembers() {
   const teamPhoto = await importImage(
-    'joelcoffman.jpg',
+    'joelcoffman_01ffe0ba0b.jpg',
     'Digital Solutions team member',
   );
 
@@ -505,34 +508,19 @@ async function importTeamMembers() {
   }
 }
 async function importSeedData() {
-  // Allow read of application content types
   await setPublicPermissions({
-    article: ['find', 'findOne'],
-    category: ['find', 'findOne'],
-    author: ['find', 'findOne'],
-    global: ['find', 'findOne'],
-    about: ['find', 'findOne'],
-    'team-member': ['find', 'findOne'],
-    'service': ['find', 'findOne'],
-    'blog-post': ['find', 'findOne'],
     'site-setting': ['find', 'findOne'],
-    'about-page': ['find', 'findOne'],
-    'vision': ['find', 'findOne'],
+    about: ['find', 'findOne'],
+    service: ['find', 'findOne'],
+    'team-member': ['find', 'findOne'],
+    'blog-post': ['find', 'findOne'],
   });
 
-  // Create all entries
-  await importCategories();
-  await importAuthors();
-  await importArticles();
-  await importGlobal();
-  await importAbout();
-
-await importSiteSetting();
-await importAboutData();
-await importServices();
-await importTeamMembers();
-await importBlogPosts();
-
+  await importSiteSetting();
+  await importAboutData();
+  await importServices();
+  await importTeamMembers();
+  await importBlogPosts();
 }
 
 async function main() {
