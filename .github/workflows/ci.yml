@@ -27,10 +27,10 @@ jobs:
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       TRANSFER_TOKEN_SALT: ${{secrets.TRANSFER_TOKEN_SALT }}
       ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY}}
-      DATABASE_CLIENT: ${{ var.DATABASE_CLIENT }}
-      CORS_ORIGIN: ${{ var.CORS_ORIGIN }}
-      WINDOW_MS: ${{var.WINDOW_MS}}
-      MAX_REQUESTS: ${{ var.MAX_REQUESTS }}
+      DATABASE_CLIENT: ${{ vars.DATABASE_CLIENT }}
+      CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}
+      WINDOW_MS: ${{ vars.WINDOW_MS }}
+      MAX_REQUESTS: ${{ vars.MAX_REQUESTS }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
