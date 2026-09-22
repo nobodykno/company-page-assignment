@@ -82,6 +82,16 @@ ssl
 nbproject
 public/uploads/*
 !public/uploads/.gitkeep
+!public/uploads/.gitkeep
+!public/uploads/web_solutions_009d80d7e7.png
+!public/uploads/web_0e43d31241.jpg
+!public/uploads/mobile_3b2dd77f2b.jpg
+!public/uploads/uiux_8d70151c30.jpeg
+!public/uploads/solutions_01d8f5e50c.webp
+!public/uploads/What_is_an_API_Integration_c0400b8983.png
+!public/uploads/joelcoffman_01ffe0ba0b.jpg
+!public/uploads/0x0_cec8535c60.webp
+!public/uploads/cyberblog_4383ec0614.webp
 .tsbuildinfo
 .eslintcache
 
