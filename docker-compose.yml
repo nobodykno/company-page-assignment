@@ -31,20 +31,22 @@ services:
     networks:
       - company-network
 
-  nginx:
-    build:
-      context: .
-      dockerfile: nginx/Dockerfile
-    container_name: company-nginx
-    restart: unless-stopped
-    ports:
-      - "3000:80"
-    depends_on:
-      - web
-      - cms
-    networks:
-      - company-network
-
+nginx:
+  build:
+    context: .
+    dockerfile: nginx/Dockerfile
+  container_name: company-nginx
+  restart: unless-stopped
+  ports:
+    - "3000:80"
+    - "3443:443"
+  volumes:
+    - ./nginx/certs:/etc/nginx/certs:ro
+  depends_on:
+    - web
+    - cms
+  networks:
+    - company-network
 networks:
   company-network:
     driver: bridge
