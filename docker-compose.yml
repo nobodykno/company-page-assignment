@@ -3,18 +3,13 @@ services:
     build:
       context: .
       dockerfile: cms/Dockerfile
-
     container_name: company-cms
-
     restart: unless-stopped
-
     ports:
       - "1337:1337"
-
     volumes:
       - cms-data:/app/cms/data
       - cms-public:/app/cms/public
-
     networks:
       - company-network
 
@@ -23,23 +18,16 @@ services:
       context: .
       dockerfile: apps/web/Dockerfile
       args:
-         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
-         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
-         NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL}
-         NEXT_PUBLIC_IMAGE_URL: ${NEXT_PUBLIC_IMAGE_URL}
-
-
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL}
+        NEXT_PUBLIC_IMAGE_URL: ${NEXT_PUBLIC_IMAGE_URL}
     container_name: company-web
-
     restart: unless-stopped
-
     expose:
       - "3000"
-
-
     depends_on:
       - cms
-
     networks:
       - company-network
 
@@ -47,18 +35,13 @@ services:
     build:
       context: .
       dockerfile: nginx/Dockerfile
-
     container_name: company-nginx
-
     restart: unless-stopped
-
     ports:
       - "3000:80"
-
     depends_on:
       - web
       - cms
-
     networks:
       - company-network
 
