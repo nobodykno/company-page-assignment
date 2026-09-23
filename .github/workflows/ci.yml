@@ -8,6 +8,7 @@ on:
 
 jobs:
   ci:
+    name: CI
     runs-on: ubuntu-latest
 
     environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
@@ -57,8 +58,7 @@ jobs:
         run: pnpm lint
 
       - name: Clean Strapi database
-        run: |
-          rm -rf cms/.tmp
+        run: rm -rf cms/.tmp
 
       - name: Start Strapi
         run: |
@@ -83,7 +83,7 @@ jobs:
       - name: Seed Strapi
         run: pnpm --filter cms seed
 
-      - name: Verify database
+      - name: Verify Strapi database
         run: |
           echo "DATABASE_CLIENT=$DATABASE_CLIENT"
           echo "DATABASE_FILENAME=$DATABASE_FILENAME"
@@ -119,6 +119,7 @@ jobs:
       - name: Test
         run: pnpm test
 
+
   deploy:
     name: Deploy to Local Machine
     needs: ci
@@ -127,12 +128,13 @@ jobs:
     environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
 
     env:
+      # Next.js build-time variables
       NEXT_PUBLIC_SITE_URL: ${{ vars.DEPLOY_NEXT_PUBLIC_SITE_URL }}
       NEXT_PUBLIC_API_URL: ${{ vars.DEPLOY_NEXT_PUBLIC_API_URL }}
       NEXT_PUBLIC_STRAPI_URL: ${{ vars.DEPLOY_NEXT_PUBLIC_STRAPI_URL }}
       NEXT_PUBLIC_IMAGE_URL: ${{ vars.DEPLOY_NEXT_PUBLIC_IMAGE_URL }}
 
-
+      # Strapi secrets
       APP_KEYS: ${{ secrets.APP_KEYS }}
       API_TOKEN_SALT: ${{ secrets.API_TOKEN_SALT }}
       ADMIN_JWT_SECRET: ${{ secrets.ADMIN_JWT_SECRET }}
@@ -140,11 +142,11 @@ jobs:
       TRANSFER_TOKEN_SALT: ${{ secrets.TRANSFER_TOKEN_SALT }}
       ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
 
-
+      # Strapi database
       DATABASE_CLIENT: ${{ vars.DATABASE_CLIENT }}
       DATABASE_FILENAME: .tmp/data.db
 
-
+      # Strapi configuration
       CORS_ORIGIN: ${{ vars.CORS_ORIGIN }}
       WINDOW_MS: ${{ vars.WINDOW_MS }}
       MAX_REQUESTS: ${{ vars.MAX_REQUESTS }}
@@ -152,6 +154,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Validate Docker Compose
+        run: docker compose config
 
       - name: Stop existing containers
         run: docker compose down
@@ -175,8 +180,29 @@ jobs:
           docker compose logs cms
           exit 1
 
+      - name: Seed Strapi
+        run: docker compose exec -T cms pnpm seed
+
+      - name: Verify Strapi API
+        run: |
+          echo "Checking team members..."
+          curl --fail-with-body \
+            "http://localhost:1337/api/team-members?populate=*"
+
+          echo "Checking blog posts..."
+          curl --fail-with-body \
+            "http://localhost:1337/api/blog-posts?populate=*"
+
       - name: Build and start Web and Nginx
         run: docker compose up -d --build web nginx
 
       - name: Verify containers
         run: docker compose ps
+
+      - name: Verify application
+        run: |
+          docker compose ps
+
+          echo "Checking HTTPS endpoint..."
+          curl -k --fail-with-body \
+            https://localhost:3443/ || true
