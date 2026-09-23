@@ -4,8 +4,9 @@ import services from '@/services';
 import { ITeamsResponse } from '@/types/team';
 import TeamMemberDetailView from './team-member-detail-view';
 import ErrorView from '@/components/error-view';
-import NotFoundView from '@/components/not-found-view';
+
 import { notFound } from 'next/navigation';
+import TeamMemberJsonLd from './team-member-json-ld';
 
 /** Steps to implement ISG */
 export const revalidate = 60;
@@ -105,10 +106,13 @@ export default async function TeamMemberDetailPage({
   }
 
   if (!teamMemberDetail || teamMemberDetail.length === 0) {
-    return (
-      <NotFoundView title='Team member' message='Team member not found' />
-    );
+    notFound();
   }
 
-  return <TeamMemberDetailView {...teamMemberDetail[0]} />;
+  return (
+    <>
+      <TeamMemberJsonLd teamMember={teamMemberDetail[0]} />
+      <TeamMemberDetailView {...teamMemberDetail[0]} />
+    </>
+  );
 }

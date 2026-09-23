@@ -9,6 +9,7 @@ import BlogDetailPage, {
 
 import services from '@/services';
 import { IBlogResponse } from '@/types/blog';
+import { notFound } from 'next/navigation';
 
 jest.mock('@/services', () => ({
   __esModule: true,
@@ -18,6 +19,10 @@ jest.mock('@/services', () => ({
       getBlogBySlug: jest.fn(),
     },
   },
+}));
+
+jest.mock('next/navigation', () => ({
+  notFound: jest.fn(),
 }));
 
 jest.mock('@/components/footer-view', () => {
@@ -118,20 +123,16 @@ describe('BlogDetailPage Integration', () => {
       );
     });
 
-    it('renders not found view when the blog does not exist', async () => {
+    it('calls notFound when the blog does not exist', async () => {
       getBlogBySlugMock.mockResolvedValue([]);
 
-      const page = await BlogDetailPage({
+      await BlogDetailPage({
         params: Promise.resolve({
           slug: 'unknown-blog',
         }),
       });
 
-      render(page);
-
-      expect(
-        screen.getByText('Blog not found'),
-      ).toBeInTheDocument();
+      expect(notFound).toHaveBeenCalledTimes(1);
     });
 
     it('renders error view when fetching the blog fails', async () => {
@@ -299,4 +300,3 @@ describe('BlogDetailPage Integration', () => {
     });
   });
 });
-
