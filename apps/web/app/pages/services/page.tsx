@@ -1,6 +1,7 @@
 import services from '@/services';
 import ServicesView from './service-view';
 import ErrorView from '@/components/error-view';
+import ServicesJsonLd from './service-json-ld';
 
 /** Steps to render SSG */
 export const dynamic = 'force-static';
@@ -26,5 +27,10 @@ export default async function ServicePage() {
     );
   }
 
-  return <ServicesView {...servicePageData} />;
+  return (
+    <>
+      <ServicesJsonLd services={servicePageData.services} />
+      <ServicesView {...servicePageData} />
+    </>
+  );
 }

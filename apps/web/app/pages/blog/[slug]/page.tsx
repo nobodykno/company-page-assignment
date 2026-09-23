@@ -5,6 +5,8 @@ import { IBlogResponse } from '@/types/blog';
 import ErrorView from '@/components/error-view';
 import { Metadata } from 'next/types';
 import NotFoundView from '@/components/not-found-view';
+import BlogJsonLd from './blog-json-ld';
+import { notFound } from 'next/navigation';
 
 /** Revalidate generated pages every 60 seconds */
 export const revalidate = 60;
@@ -102,10 +104,16 @@ export default async function BlogDetailPage({
   }
 
   if (!blogDetail.length) {
-    return  (
-      <NotFoundView title='Blog' message='Blog not found' />
-    );
+    notFound();
   }
 
-  return <BlogDetailView {...blogDetail[0]} />;
+  return (
+    <>
+      <BlogJsonLd blog={blogDetail[0]} />
+      <BlogDetailView {...blogDetail[0]} />;
+    </>
+
+  );
 }
+
+  

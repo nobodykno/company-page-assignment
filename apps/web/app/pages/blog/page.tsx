@@ -11,6 +11,7 @@ import BlogView from './blog-view';
 
 import { PAGE_SIZE } from '@/constants/pagination';
 
+
 /** SEO metadata */
 export const metadata: Metadata = {
   title: 'Blog | Digital Solutions',
@@ -48,10 +49,13 @@ export default async function BlogPage() {
   }
 
   return (
+
+  
     <BlogView
       initialBlogs={blogs.data}
       initialPagination={blogs.pagination}
     />
+
   );
 }
 

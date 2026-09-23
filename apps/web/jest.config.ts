@@ -24,6 +24,15 @@ const config: Config = {
     '!**/node_modules/**',
     '!**/.next/**',
   ],
+
+  coverageThreshold: {
+    global: {
+      branches: 30,
+      functions: 40,
+      lines: 50,
+      statements: 50,
+    },
+  },
 };
 
 export default createJestConfig(config);
