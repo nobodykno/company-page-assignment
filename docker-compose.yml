@@ -10,6 +10,9 @@ services:
 
     ports:
       - "1337:1337"
+    
+    env_file:
+      - .env.production
 
     volumes:
       - cms-data:/app/cms/data
