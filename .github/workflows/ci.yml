@@ -157,6 +157,11 @@ jobs:
 
       - name: Validate Docker Compose
         run: docker compose config
+      
+      - name: Verify deployment environment
+        run: |
+          echo "DATABASE_CLIENT=$DATABASE_CLIENT"
+          echo "DATABASE_FILENAME=$DATABASE_FILENAME"
 
       - name: Stop existing containers
         run: docker compose down
