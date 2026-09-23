@@ -1,5 +1,4 @@
 services:
-
   cms:
     build:
       context: .
@@ -10,9 +9,19 @@ services:
 
     ports:
       - "1337:1337"
-    
-    env_file:
-      - .env.production
+
+    environment:
+      APP_KEYS: ${APP_KEYS}
+      API_TOKEN_SALT: ${API_TOKEN_SALT}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      DATABASE_CLIENT: ${DATABASE_CLIENT}
+      DATABASE_FILENAME: ${DATABASE_FILENAME}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      WINDOW_MS: ${WINDOW_MS}
+      MAX_REQUESTS: ${MAX_REQUESTS}
 
     volumes:
       - cms-data:/app/cms/data
