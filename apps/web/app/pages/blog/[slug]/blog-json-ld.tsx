@@ -18,7 +18,7 @@ export default function BlogJsonLd({ blog }: BlogJsonLdProps) {
       '@type': 'Person',
       name: blog.author,
     },
-    datePublished: blog.publishedAt.toISOString(),
+    datePublished: new Date(blog.publishedAt).toISOString(),
   };
 
   return (
