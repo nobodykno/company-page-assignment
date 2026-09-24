@@ -5,6 +5,7 @@ import { httpService, httpServicePaginated } from './base.service';
 import { IHeaderDto } from '@/types/header';
 import { ITeamsResponse } from '@/types/team';
 import { IPaginatedResult } from '@/types/pagination';
+import { CACHE_DURATION } from '@/constants/cache';
 ;
 
 
@@ -32,7 +33,9 @@ const getTeamDetail = async (id: number): Promise<ITeamsResponse[]> => {
     url:url,
     method:method,
     isFormData:false,
-    cache:'force-cache'
+    cache:'force-cache',
+    revalidate: CACHE_DURATION.REVALIDATE_TIME,
+    tags: ['team-members', `team-member-${id}`]
   };
   const response =  await httpService<ITeamsResponse[]>(request);
   

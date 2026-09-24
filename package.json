@@ -9,10 +9,12 @@
     "test": "pnpm -r test",
     "typecheck": "pnpm -r exec tsc --noEmit",
     "clean": "pnpm -r clean",
+    "test:e2e": "playwright test",
     "prepare": "husky"
   },
   "pnpm": {},
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "^24.13.3",
     "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",

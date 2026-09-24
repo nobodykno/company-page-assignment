@@ -8,4 +8,5 @@ export interface IHeaderDto {
         signal?: AbortSignal;  
         cache?: RequestCache;
         revalidate?: number;
+        tags?:string[]
 }
