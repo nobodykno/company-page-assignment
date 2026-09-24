@@ -32,13 +32,12 @@ const createRequestOptions = (
   if (request.revalidate !== undefined) {
     options.next = {
       revalidate: request.revalidate,
+      tags: request.tags,
     };
   }
 
   if (body !== undefined) {
     if (request.isFormData) {
-      // Let the browser/runtime set the multipart boundary itself -
-      // never JSON-encode or set Content-Type for FormData payloads.
       options.body = body as FormData;
     } else {
       options.body =
@@ -108,9 +107,6 @@ const createTimeoutController = (
   };
 };
 
-// Shared by both variants below: build the request, fire it with the
-// timeout/abort handling, and hand the raw Response to whichever
-// response-shaping function the caller needs.
 const performFetch = async <T>(
   request: IHeaderDto,
   body: RequestBody | undefined,

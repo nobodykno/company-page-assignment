@@ -31,6 +31,7 @@ const getBlogBySlug = async (slug: string): Promise<IBlogResponse[]> => {
     isFormData:false,
     cache:'force-cache',
     revalidate: CACHE_DURATION.REVALIDATE_TIME,
+    tags: ['blogs', `blog-${slug}`]
   };
   const response =  await httpService<IBlogResponse[]>(request);
   
@@ -54,6 +55,7 @@ const getBlogPaginated = async (
     isFormData: false,
     cache: 'force-cache',
     revalidate: CACHE_DURATION.REVALIDATE_TIME,
+    tags: ['blogs'],
   };
 
   return httpServicePaginated<IBlogResponse>(request);
