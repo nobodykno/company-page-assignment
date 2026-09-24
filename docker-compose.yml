@@ -1,34 +1,35 @@
 services:
-  cms:
-    build:
-      context: .
-      dockerfile: cms/Dockerfile
 
-    container_name: company-cms
-    restart: unless-stopped
+cms:
+  build:
+    context: .
+    dockerfile: cms/Dockerfile
+  container_name: company-cms
+  restart: unless-stopped
+  ports:
+    - "1337:1337"
 
-    ports:
-      - "1337:1337"
+  environment:
+    APP_KEYS: ${APP_KEYS}
+    API_TOKEN_SALT: ${API_TOKEN_SALT}
+    ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+    JWT_SECRET: ${JWT_SECRET}
+    TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT}
+    ENCRYPTION_KEY: ${ENCRYPTION_KEY}
 
-    environment:
-      APP_KEYS: ${APP_KEYS}
-      API_TOKEN_SALT: ${API_TOKEN_SALT}
-      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
-      JWT_SECRET: ${JWT_SECRET}
-      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT}
-      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
-      DATABASE_CLIENT: ${DATABASE_CLIENT}
-      DATABASE_FILENAME: ${DATABASE_FILENAME}
-      CORS_ORIGIN: ${CORS_ORIGIN}
-      WINDOW_MS: ${WINDOW_MS}
-      MAX_REQUESTS: ${MAX_REQUESTS}
+    DATABASE_CLIENT: ${DATABASE_CLIENT}
+    DATABASE_FILENAME: ${DATABASE_FILENAME}
 
-    volumes:
-      - cms-data:/app/cms/data
-      - cms-public:/app/cms/public
+    CORS_ORIGIN: ${CORS_ORIGIN}
+    WINDOW_MS: ${WINDOW_MS}
+    MAX_REQUESTS: ${MAX_REQUESTS}
 
-    networks:
-      - company-network
+  volumes:
+    - cms-data:/app/cms/.tmp
+    - cms-public:/app/cms/public
+
+  networks:
+    - company-network
 
   web:
     build:
