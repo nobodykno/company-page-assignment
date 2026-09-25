@@ -524,7 +524,8 @@ async function importSeedData() {
     'team-member': ['find', 'findOne'],
     'about-page': ['find', 'findOne'],
     'blog-post': ['find', 'findOne'],
-    'vision': ['find', 'findOne']
+    'vision': ['find', 'findOne'],
+    contact: ['create'],
   });
 
   await importSiteSetting();

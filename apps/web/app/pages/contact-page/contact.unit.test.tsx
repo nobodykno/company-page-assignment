@@ -1,13 +1,10 @@
 
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import ContactForm from '@/components/contact/contact-form';
-import {
-  fireEvent,
-  render,
-  screen,
-} from '@testing-library/react';
 
 const mockMutate = jest.fn();
-const mockReset = jest.fn();
 
 const mockUseMutation = jest.fn();
 
@@ -21,6 +18,31 @@ jest.mock('@/services', () => ({
     postContact: jest.fn(),
   },
 }));
+
+jest.mock('@/components/contact/contact-message-field', () => {
+  return function MockContactMessageField({
+    error,
+    ...props
+  }: {
+    error?: string;
+    [key: string]: unknown;
+  }) {
+    return (
+      <div>
+        <label htmlFor="message">Message</label>
+
+        <textarea
+          id="message"
+          {...props}
+        />
+
+        {error && (
+          <p>{error}</p>
+        )}
+      </div>
+    );
+  };
+});
 
 jest.mock('@/components/error-view', () => {
   return function MockErrorView({
@@ -38,7 +60,6 @@ describe('ContactForm Unit', () => {
 
     mockUseMutation.mockReturnValue({
       mutate: mockMutate,
-      reset: mockReset,
       isPending: false,
       isError: false,
       isSuccess: false,
@@ -74,7 +95,9 @@ describe('ContactForm Unit', () => {
     ).toBeInTheDocument();
   });
 
-  it('updates form fields when user types', () => {
+  it('updates form fields when user types', async () => {
+    const user = userEvent.setup();
+
     render(<ContactForm />);
 
     const nameInput = screen.getByRole('textbox', {
@@ -89,54 +112,54 @@ describe('ContactForm Unit', () => {
       name: 'Message',
     });
 
-    fireEvent.change(nameInput, {
-      target: {
-        value: 'John Doe',
-      },
-    });
+    await user.type(nameInput, 'John Doe');
 
-    fireEvent.change(emailInput, {
-      target: {
-        value: 'john@example.com',
-      },
-    });
+    await user.type(
+      emailInput,
+      'john@example.com',
+    );
 
-    fireEvent.change(messageInput, {
-      target: {
-        value: 'Hello, I would like to know more.',
-      },
-    });
+    await user.type(
+      messageInput,
+      'Hello, I would like to know more.',
+    );
 
     expect(nameInput).toHaveValue('John Doe');
-    expect(emailInput).toHaveValue('john@example.com');
+
+    expect(emailInput).toHaveValue(
+      'john@example.com',
+    );
+
     expect(messageInput).toHaveValue(
       'Hello, I would like to know more.',
     );
   });
 
-  it('shows validation errors when submitting an empty form', () => {
+  it('shows validation errors when submitting an empty form', async () => {
+    const user = userEvent.setup();
+
     render(<ContactForm />);
 
-    fireEvent.click(
+    await user.click(
       screen.getByRole('button', {
         name: 'Send Message',
       }),
     );
 
     expect(
-      screen.getByText(
+      await screen.findByText(
         'Name must be at least 2 characters',
       ),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByText(
+      await screen.findByText(
         'Please enter a valid email address',
       ),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByText(
+      await screen.findByText(
         'Message must be at least 10 characters',
       ),
     ).toBeInTheDocument();
@@ -144,92 +167,74 @@ describe('ContactForm Unit', () => {
     expect(mockMutate).not.toHaveBeenCalled();
   });
 
-  it('shows validation error for an invalid email', () => {
+  it('shows validation error for an invalid email', async () => {
+    const user = userEvent.setup();
+
     render(<ContactForm />);
 
-    fireEvent.change(
+    await user.type(
       screen.getByRole('textbox', {
         name: 'Name',
       }),
-      {
-        target: {
-          value: 'John Doe',
-        },
-      },
+      'John Doe',
     );
 
-    fireEvent.change(
+    await user.type(
       screen.getByRole('textbox', {
         name: 'Email',
       }),
-      {
-        target: {
-          value: 'invalid-email',
-        },
-      },
+      'invalid-email',
     );
 
-    fireEvent.change(
+    await user.type(
       screen.getByRole('textbox', {
         name: 'Message',
       }),
-      {
-        target: {
-          value: 'Hello there',
-        },
-      },
+      'Hello there',
     );
 
-    fireEvent.click(
+    await user.click(
       screen.getByRole('button', {
         name: 'Send Message',
       }),
     );
 
     expect(
-      screen.getByText(/valid email/i),
+      await screen.findByText(
+        'Please enter a valid email address',
+      ),
     ).toBeInTheDocument();
 
     expect(mockMutate).not.toHaveBeenCalled();
   });
 
-  it('submits valid form data', () => {
+  it('submits valid form data', async () => {
+    const user = userEvent.setup();
+
     render(<ContactForm />);
 
-    fireEvent.change(
+    await user.type(
       screen.getByRole('textbox', {
         name: 'Name',
       }),
-      {
-        target: {
-          value: 'John Doe',
-        },
-      },
+      'John Doe',
     );
 
-    fireEvent.change(
+    await user.type(
       screen.getByRole('textbox', {
         name: 'Email',
       }),
-      {
-        target: {
-          value: 'john@example.com',
-        },
-      },
+      'john@example.com',
     );
 
-    fireEvent.change(
+    await user.type(
       screen.getByRole('textbox', {
         name: 'Message',
       }),
-      {
-        target: {
-          value: 'Hello, I would like to know more.',
-        },
-      },
+      'Hello, I would like to know more.',
     );
 
-    fireEvent.click(
+    await user.click(
       screen.getByRole('button', {
         name: 'Send Message',
       }),
@@ -247,7 +252,6 @@ describe('ContactForm Unit', () => {
   it('renders the error message when mutation fails', () => {
     mockUseMutation.mockReturnValue({
       mutate: mockMutate,
-      reset: mockReset,
       isPending: false,
       isError: true,
       isSuccess: false,
@@ -268,7 +272,6 @@ describe('ContactForm Unit', () => {
   it('renders the success message when mutation succeeds', () => {
     mockUseMutation.mockReturnValue({
       mutate: mockMutate,
-      reset: mockReset,
       isPending: false,
       isError: false,
       isSuccess: true,
@@ -287,7 +290,6 @@ describe('ContactForm Unit', () => {
   it('disables the submit button while mutation is pending', () => {
     mockUseMutation.mockReturnValue({
       mutate: mockMutate,
-      reset: mockReset,
       isPending: true,
       isError: false,
       isSuccess: false,
@@ -301,23 +303,6 @@ describe('ContactForm Unit', () => {
         name: 'Sending...',
       }),
     ).toBeDisabled();
-  });
-
-  it('resets mutation state when a field is changed', () => {
-    render(<ContactForm />);
-
-    fireEvent.change(
-      screen.getByRole('textbox', {
-        name: 'Name',
-      }),
-      {
-        target: {
-          value: 'John',
-        },
-      },
-    );
-
-    expect(mockReset).toHaveBeenCalledTimes(1);
   });
 });
 

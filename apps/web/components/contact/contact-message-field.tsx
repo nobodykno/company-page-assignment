@@ -1,19 +1,21 @@
-import type { ReactElement } from 'react';
+import type {
+  ReactElement,
+  TextareaHTMLAttributes,
+} from 'react';
 
 import { MAX_MESSAGE_LENGTH } from '@/app/schema/contact-schema';
 
-interface ContactMessageFieldProps {
-  value: string;
+interface ContactMessageFieldProps
+  extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: string;
-  onChange: (value: string) => void;
 }
 
 export default function ContactMessageField({
-  value,
   error,
-  onChange,
-}: ContactMessageFieldProps) {
-  const messageLength = value.length;
+  value = '',
+  ...props
+}: ContactMessageFieldProps): ReactElement {
+  const messageLength = String(value).length;
 
   return (
     <div>
@@ -38,12 +40,12 @@ export default function ContactMessageField({
       </div>
 
       <textarea
+        {...props}
         id="message"
         name="message"
         rows={6}
         maxLength={MAX_MESSAGE_LENGTH}
         value={value}
-        onChange={(event) => onChange(event.target.value)}
         aria-invalid={Boolean(error)}
         aria-describedby={
           error ? 'message-error' : undefined
