@@ -42,10 +42,13 @@ services:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
         NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL}
         NEXT_PUBLIC_IMAGE_URL: ${NEXT_PUBLIC_IMAGE_URL}
-        STRAPI_WEBHOOK_SECRET: ${STRAPI_WEBHOOK_SECRET}
+      
+       
 
     container_name: company-web
     restart: unless-stopped
+    environment:
+      - STRAPI_WEBHOOK_SECRET: ${STRAPI_WEBHOOK_SECRET}
 
     expose:
       - "3000"
