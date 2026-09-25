@@ -1,32 +1,21 @@
 import type {
-  ChangeEvent,
   InputHTMLAttributes,
   ReactElement,
 } from 'react';
-  
-  interface InputProps
-    extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
-    label: string;
-    error?: string;
-    onChange: (value: string) => void;
-  }
-  
+
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label: string;
+  error?: string;
+}
+
 export default function Input({
   id,
   label,
   type = 'text',
-  value,
   error,
   placeholder,
-  onChange,
   ...props
 }: InputProps): ReactElement {
-  const handleChange = (
-    event: ChangeEvent<HTMLInputElement>,
-  ): void => {
-    onChange(event.target.value);
-  };
-  
   return (
     <div>
       <label
@@ -35,14 +24,12 @@ export default function Input({
       >
         {label}
       </label>
-  
+
       <input
         {...props}
         id={id}
         name={id}
         type={type}
-        value={value}
-        onChange={handleChange}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}
         className={`w-full rounded border p-3 ${
@@ -50,7 +37,7 @@ export default function Input({
         }`}
         placeholder={placeholder}
       />
-  
+
       {error && (
         <p
           id={`${id}-error`}

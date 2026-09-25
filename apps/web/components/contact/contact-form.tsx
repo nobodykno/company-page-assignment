@@ -1,85 +1,47 @@
 'use client';
 
-import { useState } from 'react';
-import type { FormEvent, ReactElement } from 'react';
+import { memo } from 'react';
+import type { ReactElement } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import services from '@/services';
 
-
 import {
   ContactForm as ContactFormType,
-  FormErrors,
   contactSchema,
 } from '@/app/schema/contact-schema';
 
-
 import { ContactStatus } from './contact-status';
 import ContactMessageField from './contact-message-field';
-import Input from '@//components/ui/input';
+import Input from '@/components/ui/input';
 
-
-export default function ContactForm(): ReactElement {
-  const [form, setForm] = useState<ContactFormType>({
-    name: '',
-    email: '',
-    message: '',
+function ContactForm(): ReactElement {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ContactFormType>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      message: '',
+    },
   });
-
-  const [errors, setErrors] = useState<FormErrors>({});
 
   const contactMutation = useMutation({
     mutationFn: services.postContact,
 
     onSuccess: (): void => {
-      setForm({
-        name: '',
-        email: '',
-        message: '',
-      });
-
-      setErrors({});
+      reset();
     },
   });
 
-  const handleChange = (
-    field: keyof ContactFormType,
-    value: string,
-  ): void => {
-    setForm((previous: ContactFormType) => ({
-      ...previous,
-      [field]: value,
-    }));
-
-    setErrors((previous: FormErrors) => ({
-      ...previous,
-      [field]: undefined,
-    }));
-
-    contactMutation.reset();
-  };
-
-  const handleSubmit = (
-    event: FormEvent<HTMLFormElement>,
-  ): void => {
-    event.preventDefault();
-
-    const result = contactSchema.safeParse(form);
-
-    if (!result.success) {
-      const fieldErrors = result.error.flatten().fieldErrors;
-
-      setErrors({
-        name: fieldErrors.name?.[0],
-        email: fieldErrors.email?.[0],
-        message: fieldErrors.message?.[0],
-      });
-
-      return;
-    }
-
-    setErrors({});
-    contactMutation.mutate(result.data);
+  const onSubmit = (data: ContactFormType): void => {
+    contactMutation.mutate(data);
   };
 
   return (
@@ -92,51 +54,42 @@ export default function ContactForm(): ReactElement {
 
       <form
         aria-label="Contact form"
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         noValidate
         className="mt-8 space-y-6"
       >
         <Input
           id="name"
           label="Name"
-          value={form.name}
-          error={errors.name}
           placeholder="Your name"
-          onChange={(value: string): void =>
-            handleChange('name', value)
-          }
+          error={errors.name?.message}
+          {...register('name')}
         />
 
         <Input
           id="email"
           label="Email"
           type="email"
-          value={form.email}
-          error={errors.email}
           placeholder="you@example.com"
-          onChange={(value: string): void =>
-            handleChange('email', value)
-          }
+          error={errors.email?.message}
+          {...register('email')}
         />
 
         <ContactMessageField
-          value={form.message}
-          error={errors.message}
-          onChange={(value: string): void =>
-            handleChange('message', value)
-          }
+          error={errors.message?.message}
+          {...register('message')}
         />
 
         <button
           type="submit"
           disabled={contactMutation.isPending}
-          className="rounded bg-[var(--color-primary)] px-6 py-3 font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded bg-[var(--color-primary)] px-6 py-3 font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
-          {contactMutation.isPending
-            ? 'Sending...'
-            : 'Send Message'}
+          {contactMutation.isPending ? 'Sending...' : 'Send Message'}
         </button>
       </form>
     </>
   );
 }
+
+export default memo(ContactForm);
