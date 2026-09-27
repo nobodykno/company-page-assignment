@@ -41,4 +41,4 @@ RUN pnpm build
 
 EXPOSE 1337
 
-CMD ["pnpm", "develop"]
+CMD ["pnpm", "start"]
