@@ -1,5 +1,4 @@
 import type { Core } from '@strapi/strapi';
-console.log("process_env_param",process.env);
 const config: Core.Config.Middlewares = [
   'strapi::logger',
   'strapi::errors',

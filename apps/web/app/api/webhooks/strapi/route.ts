@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    console.log('Strapi webhook payload:', body);
+ 
 
     const { model, entry } = body;
     const slug = entry?.slug;
