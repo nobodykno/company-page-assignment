@@ -16,3 +16,19 @@ export interface IBlogViewProps {
     initialBlogs: IBlogProps[];
     initialPagination: IPaginationMeta;
   }
+
+
+export interface IBlogCardProps {
+    blog: IBlogProps;
+  }
+
+export interface IBlogListProps {
+  blogs: IBlogProps[];
+  isFetchingNextPage: boolean;
+  skeletonCount: number;
+}
+
+export interface IBlogViewProps {
+  initialBlogs: IBlogProps[];
+  initialPagination: IPaginationMeta;
+}

@@ -20,16 +20,13 @@ import Skeleton from '@/components/ui/skeleton';
 import services from '@/services';
 import { ITeamsResponse } from '@/types/team';
 import { IPaginationMeta } from '@/types/pagination';
+import { ITeamSectionProps } from '@/props/team-member-detail.props';
 
-interface TeamSectionProps {
-  initialTeam: ITeamsResponse[];
-  initialPagination: IPaginationMeta;
-}
 
 const TeamSection = ({
   initialTeam,
   initialPagination,
-}: TeamSectionProps): ReactElement => {
+}: ITeamSectionProps): ReactElement => {
   const [team, setTeam] = useState<ITeamsResponse[]>(
     initialTeam,
   );

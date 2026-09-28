@@ -1,10 +1,9 @@
-import { IBlogResponse } from '@/types/blog';
+import { IBlogJsonLdProps } from '@/props/json-ld-props';
 
-interface BlogJsonLdProps {
-  blog: IBlogResponse;
-}
 
-export default function BlogJsonLd({ blog }: BlogJsonLdProps) {
+
+
+export default function BlogJsonLd({ blog }: IBlogJsonLdProps) {
   const imageUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL}${blog.image.url}`;
 
   const jsonLd = {

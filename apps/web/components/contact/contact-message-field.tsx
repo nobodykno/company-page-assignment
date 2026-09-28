@@ -1,20 +1,16 @@
 import type {
   ReactElement,
-  TextareaHTMLAttributes,
 } from 'react';
 
 import { MAX_MESSAGE_LENGTH } from '@/app/schema/contact-schema';
+import { IContactMessageFieldProps } from '@/props/contact-props';
 
-interface ContactMessageFieldProps
-  extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-  error?: string;
-}
 
 export default function ContactMessageField({
   error,
   value = '',
   ...props
-}: ContactMessageFieldProps): ReactElement {
+}: IContactMessageFieldProps): ReactElement {
   const messageLength = String(value).length;
 
   return (

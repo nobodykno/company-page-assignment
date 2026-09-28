@@ -1,13 +1,12 @@
 import Card from '@/components/ui/card';
 import Skeleton from '@/components/ui/skeleton';
+import { IBlogSkeletonProps } from '@/props/skeleton-props';
 
-interface BlogSkeletonProps {
-  count: number;
-}
+
 
 export default function BlogSkeleton({
   count,
-}: BlogSkeletonProps) {
+}: IBlogSkeletonProps) {
   return (
     <>
       {Array.from({ length: count }).map((_, index) => (

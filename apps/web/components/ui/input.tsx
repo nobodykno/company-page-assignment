@@ -1,12 +1,10 @@
+import { IInputProps } from '@/props/ui-props';
 import type {
   InputHTMLAttributes,
   ReactElement,
 } from 'react';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
-  error?: string;
-}
+
 
 export default function Input({
   id,
@@ -15,7 +13,7 @@ export default function Input({
   error,
   placeholder,
   ...props
-}: InputProps): ReactElement {
+}: IInputProps): ReactElement {
   return (
     <div>
       <label

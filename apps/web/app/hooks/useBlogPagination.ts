@@ -8,24 +8,11 @@ import { CACHE_DURATION } from '@/constants/cache';
 import { IBlogProps } from '@/props/blog-props';
 import {
   IPaginatedResult,
-  IPaginationMeta,
 } from '@/types/pagination';
+import { UseInfiniteBlogsProps, UseInfiniteBlogsResult } from '@/props/pagination-props';
 
-interface UseInfiniteBlogsProps {
-  initialBlogs: IBlogProps[];
-  initialPagination: IPaginationMeta;
-}
 
-interface UseInfiniteBlogsResult {
-  blogs: IBlogProps[];
-  total: number;
-  hasNextPage: boolean;
-  isFetchingNextPage: boolean;
-  isError: boolean;
-  error: unknown;
-  loadMoreError: string | null;
-  loadMore: () => Promise<void>;
-}
+
 
 export function useInfiniteBlogs({
   initialBlogs,

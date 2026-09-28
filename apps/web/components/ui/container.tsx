@@ -1,10 +1,7 @@
-import type { ReactNode } from 'react';
+import { IContainerProps } from '@/props/ui-props';
 
-interface ContainerProps {
-  children: ReactNode;
-  className?: string;
-  maxWidth?: 'sm' | 'md' | 'lg' | 'xl';
-}
+
+
 
 const maxWidths = {
   sm: 'max-w-3xl',
@@ -17,7 +14,7 @@ export default function Container({
   children,
   className = '',
   maxWidth = 'lg',
-}: ContainerProps) {
+}: IContainerProps) {
   return (
     <div
       className={`mx-auto w-full px-4 sm:px-6 lg:px-8 ${maxWidths[maxWidth]} ${className}`}

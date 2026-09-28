@@ -2,15 +2,14 @@ import Link from 'next/link';
 
 import Card from '@/components/ui/card';
 import { ROUTES } from '@/constants/routes';
-import { IBlogProps } from '@/props/blog-props';
+import { IBlogCardProps } from '@/props/blog-props';
 
-interface BlogCardProps {
-  blog: IBlogProps;
-}
+
+
 
 export default function BlogCard({
   blog,
-}: BlogCardProps) {
+}: IBlogCardProps) {
   const publishedDate = new Date(blog.publishedAt).toLocaleDateString(
     'en-GB',
   );

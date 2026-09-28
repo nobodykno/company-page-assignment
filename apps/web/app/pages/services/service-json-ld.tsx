@@ -1,13 +1,12 @@
-import { IService } from '@/types/business';
+import { IServicesJsonLdProps } from '@/props/json-ld-props';
 
 
-interface ServicesJsonLdProps {
-  services: IService[];
-}
+
+
 
 export default function ServicesJsonLd({
   services,
-}: ServicesJsonLdProps) {
+}: IServicesJsonLdProps) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',

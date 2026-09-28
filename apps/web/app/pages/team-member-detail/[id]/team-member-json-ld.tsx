@@ -1,12 +1,11 @@
-import { ITeamsResponse } from '@/types/team';
+import { ITeamMemberJsonLdProps } from '@/props/json-ld-props';
 
-interface TeamMemberJsonLdProps {
-  teamMember: ITeamsResponse;
-}
+
+
 
 export default function TeamMemberJsonLd({
   teamMember,
-}: TeamMemberJsonLdProps) {
+}: ITeamMemberJsonLdProps) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',

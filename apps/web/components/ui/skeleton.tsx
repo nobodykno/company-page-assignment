@@ -1,9 +1,8 @@
-interface SkeletonProps {
-    className?: string;
-  }
+import { ISkeletonProps } from '@/props/skeleton-props';
+
   
 
-export default function Skeleton({ className = '' }: SkeletonProps) {
+export default function Skeleton({ className = '' }: ISkeletonProps) {
   return (
     <div
       aria-hidden="true"

@@ -1,8 +1,7 @@
+
 'use client';
 
-
-
-import { IBlogProps } from '@/props/blog-props';
+import { IBlogProps, IBlogViewProps } from '@/props/blog-props';
 import { IPaginationMeta } from '@/types/pagination';
 
 import { PAGE_SIZE } from '@/constants/pagination';
@@ -17,15 +16,11 @@ import BlogList from '@/components/blog/blog-list';
 import BlogHeader from '@/components/blog/blog-header';
 
 
-interface BlogViewProps {
-  initialBlogs: IBlogProps[];
-  initialPagination: IPaginationMeta;
-}
 
 export default function BlogView({
   initialBlogs,
   initialPagination,
-}: BlogViewProps) {
+}: IBlogViewProps) {
   const {
     blogs,
     total,
@@ -72,8 +67,8 @@ export default function BlogView({
         blogCount={blogs.length}
       />
 
-      <Container className="py-16">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <Container className="px-4 py-10 sm:px-6 sm:py-12 md:py-16">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
           <BlogList
             blogs={filteredBlogs}
             isFetchingNextPage={isFetchingNextPage}
@@ -81,17 +76,20 @@ export default function BlogView({
           />
         </div>
 
-        <BlogPagination
-          blogCount={blogs.length}
-          filteredCount={filteredBlogs.length}
-          total={total}
-          isSearching={isSearching}
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-          loadMoreError={loadMoreError}
-          loadMore={loadMore}
-        />
+        <div className="mt-8 sm:mt-10">
+          <BlogPagination
+            blogCount={blogs.length}
+            filteredCount={filteredBlogs.length}
+            total={total}
+            isSearching={isSearching}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            loadMoreError={loadMoreError}
+            loadMore={loadMore}
+          />
+        </div>
       </Container>
     </main>
   );
 }
+

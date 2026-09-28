@@ -1,16 +1,8 @@
 
+import { IBlogPaginationProps } from '@/props/blog-pagination-props';
 import type { ReactElement } from 'react';
 
-interface BlogPaginationProps {
-  blogCount: number;
-  filteredCount: number;
-  total: number;
-  isSearching: boolean;
-  hasNextPage: boolean;
-  isFetchingNextPage: boolean;
-  loadMoreError: string | null;
-  loadMore: () => Promise<void>;
-}
+
 
 export default function BlogPagination({
   blogCount,
@@ -21,7 +13,7 @@ export default function BlogPagination({
   isFetchingNextPage,
   loadMoreError,
   loadMore,
-}: BlogPaginationProps): ReactElement | null {
+}: IBlogPaginationProps): ReactElement | null {
   if (blogCount === 0) {
     return null;
   }

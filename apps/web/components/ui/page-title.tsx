@@ -1,19 +1,13 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import Container from './container';
 
-interface PageTitleProps {
-  title: ReactNode;
-  description: ReactNode;
-  titleProps?: ComponentPropsWithoutRef<'h1'>;
-  descriptionProps?: ComponentPropsWithoutRef<'p'>;
-}
+import Container from './container';
+import { IPageTitleProps } from '@/props/page-title-props';
 
 export default function PageTitle({
   title,
   description,
   titleProps,
   descriptionProps,
-}: PageTitleProps) {
+}: IPageTitleProps) {
   return (
     <Container className="py-16">
       <h1

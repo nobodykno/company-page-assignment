@@ -2,13 +2,8 @@
 import { useMemo, useState } from 'react';
 
 import { IBlogProps } from '@/props/blog-props';
+import { UseBlogSearchResult } from '@/props/search-props';
 
-interface UseBlogSearchResult {
-  search: string;
-  setSearch: (value: string) => void;
-  filteredBlogs: IBlogProps[];
-  isSearching: boolean;
-}
 
 export function useBlogSearch(
   blogs: IBlogProps[],

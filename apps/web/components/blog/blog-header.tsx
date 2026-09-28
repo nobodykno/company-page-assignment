@@ -3,14 +3,7 @@ import type { ReactElement } from 'react';
 
 import Container from '@/components/ui/container';
 import PageTitle from '@/components/ui/page-title';
-
-interface BlogHeaderProps {
-  search: string;
-  setSearch: (value: string) => void;
-  isSearching: boolean;
-  hasNextPage: boolean;
-  blogCount: number;
-}
+import { IBlogHeaderProps } from '@/props/blog-header.props';
 
 export default function BlogHeader({
   search,
@@ -18,7 +11,7 @@ export default function BlogHeader({
   isSearching,
   hasNextPage,
   blogCount,
-}: BlogHeaderProps): ReactElement {
+}: IBlogHeaderProps): ReactElement {
   return (
     <section
       aria-label="Blog introduction"
